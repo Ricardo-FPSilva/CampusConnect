@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Campus Connect</string>
+    <string name="back">Back</string>
+
+    <string name="campus_connect_logo">Campus Connect Logo</string>
+    <string name="welcome">Bem vindo!!</string>
+    <string name="welcome_message">É com grande alegria que te recebemos em nosso app!</string>
+    <string name="welcome_message_2">Aqui você encontrará uma variedade de eventos institucionais que certamente serão do seu interesse, desde workshops informativos até grandes congressos.</string>
+    <string name="start">Começar</string>
+
+    <string name="registration">Matricula</string>
+    <string name="no_registration">Não está cadastrado?</string>
+    <string name="instructions_to_no_registration">\nA base de cadastro do Campus Connect é alimentada pelas informações fornecidas pela sua instituição. Não é preciso cadastro de matricula pelo usuário. Caso não seja possivel encontrar sua matricula, siga as seguintes instruções.\n\n- Verifique se sua instituição tem parceria com o Campus Connect.\n- Verifique com sua instituição se a base de dados fornecida está atualizada.\n- Solicite que sua instituição atualize a base de dados e inclua as matriculas faltantes.\n- Caso pertinencia do erro: Solicite que sua instituição comunique a adminstração do Campus Connect para que possamos averiguar o caso.
+    </string>
+    <string name="digite_sua_matricula">Digite sua matricula:</string>
+    <string name="send">Enviar</string>
+    <string name="verification_code">Codigo de Verificação</string>
+    <string name="code_format">X X X X X X</string>
+    <string name="nao_recebeu_codigo">Você não recebeu o código?</string>
+    <string name="send_again">Enviar Novamente</string>
+    <string name="verifique_seu_email"><![CDATA["Verifique seu email: <Email> e digite o código de verificação: "]]></string>
+    <string name="password">password</string>
+
+</resources>
