@@ -26,5 +26,6 @@
     <string name="esqueceu_sua_senha">Esqueceu sua senha?</string>
     <string name="acess">Acessar</string>
     <string name="confirme_sua_senha">Confirme sua senha:</string>
+    <string name="verify">Verificar</string>
 
 </resources>
