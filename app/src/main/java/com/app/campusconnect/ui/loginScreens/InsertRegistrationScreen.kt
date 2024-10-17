@@ -52,7 +52,7 @@ fun InsertRegistrationScreen(
         Spacer(modifier = Modifier.weight(2f))
         Text(
             text = stringResource(R.string.digite_sua_matricula),
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
         )
@@ -72,7 +72,6 @@ fun InsertRegistrationScreen(
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
         Button(
             onClick = { /*TODO*/ },
-            shape = MaterialTheme.shapes.extraLarge,
             modifier = Modifier
                 .align(Alignment.End)
                 .width(dimensionResource(id = R.dimen.half_screen_size))

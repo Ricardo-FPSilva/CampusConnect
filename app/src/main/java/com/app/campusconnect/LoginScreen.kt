@@ -22,58 +22,27 @@ import com.app.campusconnect.ui.loginScreens.VerificationCodeScreen
 import com.app.campusconnect.ui.loginScreens.WelcomeScreen
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CampusConnectAppBar(
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(
-        title = {},
-        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_small)),
-        navigationIcon = {
-            if (true) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back),
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-            }
-        }
-    )
-}
-
-@Composable
-fun CampusConnectApp(){
+fun LoginScreen(){
     Scaffold (
-        topBar = {
-            CampusConnectAppBar(
-                canNavigateBack = false,
-                navigateUp = { /* TODO: implement back navigation */ }
-            )
-        },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
+        EnterProfileScreen()
+    }
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenLightThemePreview() {
+    CampusConnectTheme (darkTheme = false) {
         LoginScreen()
     }
-
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CampusConnectAppLightThemePreview() {
-    CampusConnectTheme (darkTheme = false) {
-        CampusConnectApp()
-    }
 }
 @Preview(showBackground = true)
 @Composable
-fun CampusConnectAppDarkThemePreview() {
+fun LoginScreenDarkThemePreview() {
     CampusConnectTheme (darkTheme = true) {
-        CampusConnectApp()
+        LoginScreen()
     }
 }

@@ -1,12 +1,16 @@
 package com.app.campusconnect.ui.loginScreens
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,12 +21,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -32,50 +41,73 @@ import com.app.campusconnect.R
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
-fun NewPasswordScreen(
+fun EnterProfileScreen(
     modifier: Modifier = Modifier,
 ){
     Column (
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = modifier
             .padding(dimensionResource(id = R.dimen.padding_medium))
             .fillMaxSize()
     ){
         Spacer(modifier = Modifier.weight(2f))
-        Text(
-            text = stringResource(R.string.new_password),
-            style = MaterialTheme.typography.displayLarge,
-            fontWeight = FontWeight.Bold,
-        )
+        Row (
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ){
+            Spacer(modifier = Modifier.weight(1f))
+            Box (
+                modifier = Modifier
+                    .size(dimensionResource(id = R.dimen.half_screen_size))
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.campus_connect_logo),
+                    contentDescription = stringResource(R.string.campus_connect_logo),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(MaterialTheme.shapes.extraLarge)
+                        .scale(1.3f)
+                )
+            }
+            Spacer(modifier = Modifier.weight(2f))
+            Column (
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
+            ){
+                Text(
+                    text = "Olá, Ricardo",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
+                )
+                Text(
+                    text = "202338307369",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
+                )
+                Text(
+                    text = "Ciência da Computação",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
+        }
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = stringResource(R.string.insert_new_password),
+            text = stringResource(R.string.confirme_sua_senha),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.Start)
         )
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)))
-        NewPasswordField(
-            label = R.string.new_password,
-            leadingIcon = Icons.Default.Lock,
-            value = "",
-            onValueChange = {},
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Next
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
-        Text(
-            text = stringResource(R.string.confirm_new_password),
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
-        )
-        Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)))
-        NewPasswordField(
-            label = R.string.new_password,
+        EnterPasswordField(
+            label = R.string.password,
             leadingIcon = Icons.Default.Lock,
             value = "",
             onValueChange = {},
@@ -95,17 +127,29 @@ fun NewPasswordScreen(
                 .wrapContentHeight()
         ) {
             Text(
-                text = stringResource(R.string.send),
+                text = stringResource(R.string.acess),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
             )
         }
-        Spacer(modifier = Modifier.weight(5f))
+        Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
+        TextButton(
+            onClick = { /*TODO*/ }
+        ) {
+            Text(
+                text = stringResource(R.string.esqueceu_sua_senha),
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+
+            )
+        }
+        Spacer(modifier = Modifier.weight(3f))
     }
 }
 @Composable
-fun NewPasswordField(
+fun EnterPasswordField(
     @StringRes label: Int,
     leadingIcon: ImageVector,
     value: String,
@@ -126,16 +170,16 @@ fun NewPasswordField(
 
 @Preview(showBackground = true)
 @Composable
-fun NewPasswordLightThemePreview() {
+fun EnterProfileLightThemePreview() {
     CampusConnectTheme (darkTheme = false){
-        NewPasswordScreen()
+        EnterProfileScreen()
     }
 }
 @Preview(showBackground = true)
 @Composable
-fun NewPasswordDarkThemePreview() {
+fun EnterProfileDarkThemePreview() {
     CampusConnectTheme (darkTheme = true){
-        NewPasswordScreen()
+        EnterProfileScreen()
     }
 }
 
