@@ -28,26 +28,21 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
+import com.app.campusconnect.data.LoginUiState
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun NewPasswordScreen(
+    onNewPasswordValueChange: (String) -> Unit,
+    onConfirmNewPasswordValueChange: (String) -> Unit,
+    onSendClick: () -> Unit,
     modifier: Modifier = Modifier,
 ){
     Column (
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
         modifier = modifier
-            .padding(dimensionResource(id = R.dimen.padding_medium))
-            .fillMaxSize()
     ){
-        Spacer(modifier = Modifier.weight(2f))
-        Text(
-            text = stringResource(R.string.new_password),
-            style = MaterialTheme.typography.displayLarge,
-            fontWeight = FontWeight.Bold,
-        )
-        Spacer(modifier = Modifier.weight(1f))
         Text(
             text = stringResource(R.string.insert_new_password),
             style = MaterialTheme.typography.headlineSmall,
@@ -58,7 +53,7 @@ fun NewPasswordScreen(
             label = R.string.new_password,
             leadingIcon = Icons.Default.Lock,
             value = "",
-            onValueChange = {},
+            onValueChange = onNewPasswordValueChange,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Next
@@ -77,7 +72,7 @@ fun NewPasswordScreen(
             label = R.string.new_password,
             leadingIcon = Icons.Default.Lock,
             value = "",
-            onValueChange = {},
+            onValueChange = onConfirmNewPasswordValueChange,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
@@ -87,7 +82,7 @@ fun NewPasswordScreen(
         )
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onSendClick() },
             modifier = Modifier
                 .align(Alignment.End)
                 .width(dimensionResource(id = R.dimen.half_screen_size))
@@ -127,14 +122,28 @@ fun NewPasswordField(
 @Composable
 fun NewPasswordLightThemePreview() {
     CampusConnectTheme (darkTheme = false){
-        NewPasswordScreen()
+        NewPasswordScreen(
+            onNewPasswordValueChange = {},
+            onConfirmNewPasswordValueChange = {},
+            onSendClick = {},
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+        )
     }
 }
 @Preview(showBackground = true)
 @Composable
 fun NewPasswordDarkThemePreview() {
     CampusConnectTheme (darkTheme = true){
-        NewPasswordScreen()
+        NewPasswordScreen(
+            onNewPasswordValueChange = {},
+            onConfirmNewPasswordValueChange = {},
+            onSendClick = {},
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+        )
     }
 }
 

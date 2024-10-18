@@ -33,15 +33,13 @@ import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun WelcomeScreen(
-    modifier: Modifier = Modifier,
+    onStartedButtonClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
-            .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.padding_medium))
-
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Box (
@@ -83,7 +81,7 @@ fun WelcomeScreen(
         )
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onStartedButtonClick() },
             modifier = Modifier
                 .wrapContentHeight()
                 .fillMaxWidth()
@@ -110,13 +108,23 @@ fun WelcomeScreen(
 @Composable
 fun WelcomeScreenPreview() {
     CampusConnectTheme (darkTheme = false){
-        WelcomeScreen()
+        WelcomeScreen(
+            onStartedButtonClick = {},
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+        )
     }
 }
 @Preview(showBackground = true)
 @Composable
 fun WelcomeScreenDarkThemePreview() {
     CampusConnectTheme (darkTheme = true){
-        WelcomeScreen()
+        WelcomeScreen(
+            onStartedButtonClick = {},
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+        )
     }
 }

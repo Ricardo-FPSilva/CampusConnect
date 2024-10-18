@@ -29,39 +29,33 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
+import com.app.campusconnect.data.LoginUiState
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
-fun InsertRegistrationScreen(
+fun RegistrationScreen(
+    loginUiState: LoginUiState,
+    onSendButtonClick: () -> Unit,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column (
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
         modifier = modifier
-            .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.padding_medium))
-
     ) {
-        Spacer(modifier = Modifier.weight(3f))
-        Text(
-            text = stringResource(R.string.registration),
-            style = MaterialTheme.typography.displayLarge,
-            fontWeight = FontWeight.Bold,
-        )
-        Spacer(modifier = Modifier.weight(2f))
         Text(
             text = stringResource(R.string.digite_sua_matricula),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
         )
-        Spacer(modifier = Modifier.weight(1f))
-        InsertRegistrationField(
+        Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)))
+        RegistrationField(
             label = R.string.registration,
             leadingIcon = Icons.Default.AccountCircle,
-            value = "",
-            onValueChange = {},
+            value = loginUiState.matricula,
+            onValueChange =  onValueChange,
             keyboardOptions =  KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
@@ -71,7 +65,7 @@ fun InsertRegistrationScreen(
         )
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onSendButtonClick() },
             modifier = Modifier
                 .align(Alignment.End)
                 .width(dimensionResource(id = R.dimen.half_screen_size))
@@ -102,7 +96,7 @@ fun InsertRegistrationScreen(
     }
 }
 @Composable
-fun InsertRegistrationField(
+fun RegistrationField(
     @StringRes label: Int,
     leadingIcon: ImageVector,
     value: String,
@@ -124,15 +118,29 @@ fun InsertRegistrationField(
 
 @Preview(showBackground = true)
 @Composable
-fun InsertRegistrationLightThemePreview() {
+fun RegistrationLightThemePreview() {
     CampusConnectTheme (darkTheme = false){
-        InsertRegistrationScreen()
+        RegistrationScreen(
+            loginUiState = LoginUiState("", ""),
+            onSendButtonClick = {},
+            onValueChange = {},
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+        )
     }
 }
 @Preview(showBackground = true)
 @Composable
-fun InsertRegistrationDarkThemePreview() {
+fun RegistrationDarkThemePreview() {
     CampusConnectTheme (darkTheme = true){
-        InsertRegistrationScreen()
+        RegistrationScreen(
+            loginUiState = LoginUiState(),
+            onSendButtonClick = {},
+            onValueChange = {},
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+        )
     }
 }

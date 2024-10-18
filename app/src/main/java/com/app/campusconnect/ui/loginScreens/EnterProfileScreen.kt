@@ -37,20 +37,21 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
+import com.app.campusconnect.data.LoginUiState
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun EnterProfileScreen(
+    loginUiState: LoginUiState,
+    onAccessClick: () -> Unit,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ){
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
-            .padding(dimensionResource(id = R.dimen.padding_medium))
-            .fillMaxSize()
     ){
-        Spacer(modifier = Modifier.weight(2f))
         Row (
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -78,26 +79,26 @@ fun EnterProfileScreen(
                 modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
             ){
                 Text(
-                    text = "Olá, Ricardo",
+                    text = stringResource(R.string.greeting_name, loginUiState.nome) ,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
                 )
                 Text(
-                    text = "202338307369",
+                    text = loginUiState.matricula,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
                 )
                 Text(
-                    text = "Ciência da Computação",
+                    text = loginUiState.curso,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
         }
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
         Text(
             text = stringResource(R.string.confirme_sua_senha),
             style = MaterialTheme.typography.headlineSmall,
@@ -108,8 +109,8 @@ fun EnterProfileScreen(
         EnterPasswordField(
             label = R.string.password,
             leadingIcon = Icons.Default.Lock,
-            value = "",
-            onValueChange = {},
+            value = loginUiState.confirmaSenha,
+            onValueChange = onValueChange,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
@@ -119,14 +120,14 @@ fun EnterProfileScreen(
         )
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onAccessClick() },
             modifier = Modifier
                 .align(Alignment.End)
                 .width(dimensionResource(id = R.dimen.half_screen_size))
                 .wrapContentHeight()
         ) {
             Text(
-                text = stringResource(R.string.acess),
+                text = stringResource(R.string.access),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
@@ -171,14 +172,28 @@ fun EnterPasswordField(
 @Composable
 fun EnterProfileLightThemePreview() {
     CampusConnectTheme (darkTheme = false){
-        EnterProfileScreen()
+        EnterProfileScreen(
+            loginUiState = LoginUiState(),
+            onAccessClick = {},
+            onValueChange = {},
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+        )
     }
 }
 @Preview(showBackground = true)
 @Composable
 fun EnterProfileDarkThemePreview() {
     CampusConnectTheme (darkTheme = true){
-        EnterProfileScreen()
+        EnterProfileScreen(
+            loginUiState = LoginUiState(),
+            onAccessClick = {},
+            onValueChange = {},
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+        )
     }
 }
 

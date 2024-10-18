@@ -25,10 +25,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
+import com.app.campusconnect.data.LoginUiState
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
-fun VerificationCodeScreen(
+fun EmailCodeScreen(
+    loginUiState: LoginUiState,
+    onVerifyClick: () -> Unit,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column (
@@ -39,13 +43,6 @@ fun VerificationCodeScreen(
             .padding(dimensionResource(id = R.dimen.padding_medium))
 
     ) {
-        Spacer(modifier = Modifier.weight(2f))
-        Text(
-            text = stringResource(R.string.verification_code),
-            style = MaterialTheme.typography.displayLarge,
-            fontWeight = FontWeight.Bold,
-        )
-        Spacer(modifier = Modifier.weight(1f))
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -55,17 +52,23 @@ fun VerificationCodeScreen(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
+            Text(
+                text = loginUiState.email,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.End)
+            )
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)))
             Text(
-                text = stringResource(id = R.string.verification_code),
+                text = stringResource(id = R.string.code),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
             )
-            VerificationCodeField(
+            EmailCodeField(
                 label = R.string.code_format,
-                value = "",
-                onValueChange = {},
+                value = loginUiState.emailCode,
+                onValueChange = onValueChange,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
@@ -95,7 +98,7 @@ fun VerificationCodeScreen(
         }
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onVerifyClick() },
             modifier = Modifier
                 .wrapContentHeight()
                 .fillMaxWidth()
@@ -107,12 +110,11 @@ fun VerificationCodeScreen(
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
             )
         }
-        Spacer(modifier = Modifier.weight(3f))
-
+        Spacer(modifier = Modifier.weight(2f))
     }
 }
 @Composable
-fun VerificationCodeField(
+fun EmailCodeField(
     @StringRes label: Int,
     value: String,
     onValueChange: (String) -> Unit,
@@ -131,15 +133,27 @@ fun VerificationCodeField(
 
 @Preview(showBackground = true)
 @Composable
-fun VerificationCodeLightThemePreview() {
+fun EmailCodeLightThemePreview() {
     CampusConnectTheme (darkTheme = false){
-        VerificationCodeScreen()
+        EmailCodeScreen(
+            loginUiState = LoginUiState(),
+            onVerifyClick = {},
+            onValueChange = {},
+            modifier = Modifier
+        )
     }
 }
 @Preview(showBackground = true)
 @Composable
-fun VerificationCodeDarkThemePreview() {
+fun EmailCodeDarkThemePreview() {
     CampusConnectTheme (darkTheme = true){
-        VerificationCodeScreen()
+        EmailCodeScreen(
+            loginUiState = LoginUiState(),
+            onVerifyClick = {},
+            onValueChange = {},
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+        )
     }
 }
