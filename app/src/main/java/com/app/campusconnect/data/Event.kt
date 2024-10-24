@@ -2,7 +2,6 @@ package com.app.campusconnect.data
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import java.time.LocalDate
 
 data class Event(
     @DrawableRes val imageResourceId: Int,
