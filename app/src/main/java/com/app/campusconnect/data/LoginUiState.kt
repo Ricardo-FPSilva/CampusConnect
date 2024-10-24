@@ -2,7 +2,7 @@ package com.app.campusconnect.data
 
 data class LoginUiState(
 
-    val matricula: String = "202338307369",
+    val matricula: String = "",
 
     val senha: String = "",
 

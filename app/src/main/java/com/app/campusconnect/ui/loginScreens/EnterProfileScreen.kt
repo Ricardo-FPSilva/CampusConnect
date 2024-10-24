@@ -109,7 +109,7 @@ fun EnterProfileScreen(
         EnterPasswordField(
             label = R.string.password,
             leadingIcon = Icons.Default.Lock,
-            value = loginUiState.confirmaSenha,
+            value = loginUiState.senha,
             onValueChange = onValueChange,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,

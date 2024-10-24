@@ -33,6 +33,7 @@ import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun NewPasswordScreen(
+    loginUiState: LoginUiState,
     onNewPasswordValueChange: (String) -> Unit,
     onConfirmNewPasswordValueChange: (String) -> Unit,
     onSendClick: () -> Unit,
@@ -52,7 +53,7 @@ fun NewPasswordScreen(
         NewPasswordField(
             label = R.string.new_password,
             leadingIcon = Icons.Default.Lock,
-            value = "",
+            value = loginUiState.newPassword,
             onValueChange = onNewPasswordValueChange,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
@@ -71,7 +72,7 @@ fun NewPasswordScreen(
         NewPasswordField(
             label = R.string.new_password,
             leadingIcon = Icons.Default.Lock,
-            value = "",
+            value = loginUiState.confirmNewPassword,
             onValueChange = onConfirmNewPasswordValueChange,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
@@ -123,6 +124,7 @@ fun NewPasswordField(
 fun NewPasswordLightThemePreview() {
     CampusConnectTheme (darkTheme = false){
         NewPasswordScreen(
+            loginUiState = LoginUiState(),
             onNewPasswordValueChange = {},
             onConfirmNewPasswordValueChange = {},
             onSendClick = {},
@@ -137,6 +139,7 @@ fun NewPasswordLightThemePreview() {
 fun NewPasswordDarkThemePreview() {
     CampusConnectTheme (darkTheme = true){
         NewPasswordScreen(
+            loginUiState = LoginUiState(),
             onNewPasswordValueChange = {},
             onConfirmNewPasswordValueChange = {},
             onSendClick = {},
