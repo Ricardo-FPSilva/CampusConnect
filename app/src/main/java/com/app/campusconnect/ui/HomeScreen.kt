@@ -122,7 +122,11 @@ fun EventList(
     modifier: Modifier = Modifier
 ) {
     Column {
-        Text(text = "Categoria")
+        Text(
+            text = "Categoria",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+        )
         LazyRow {
             items(eventList){ item: Event ->
                     EventCard(

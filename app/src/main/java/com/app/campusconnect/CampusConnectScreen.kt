@@ -62,7 +62,7 @@ fun CampusConnectApp(
         },
         bottomBar = {
             if (currentScreen == CampusConnectScreen.Home)
-                CampusConnectBottomAppBar(currentScreen = currentScreen)
+                CampusConnectBottomAppBar()
         }
     ) { innerPadding ->
         val uiState by viewModel.uiState.collectAsState()
