@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui.loginScreens
+package com.app.campusconnect.ui.authentication
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,38 +26,56 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
-import com.app.campusconnect.data.LoginUiState
+import com.app.campusconnect.data.AuthUiState
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
-fun RegistrationScreen(
-    loginUiState: LoginUiState,
-    onSendButtonClick: () -> Unit,
-    onValueChange: (String) -> Unit,
+fun NewPasswordScreen(
+    loginUiState: AuthUiState,
+    onNewPasswordValueChange: (String) -> Unit,
+    onConfirmNewPasswordValueChange: (String) -> Unit,
+    onSendClick: () -> Unit,
     modifier: Modifier = Modifier,
-) {
+){
     Column (
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
         modifier = modifier
-    ) {
+    ){
         Text(
-            text = stringResource(R.string.digite_sua_matricula),
+            text = stringResource(R.string.insert_new_password),
             style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)))
-        RegistrationField(
-            label = R.string.registration,
-            leadingIcon = Icons.Default.AccountCircle,
-            value = loginUiState.matricula,
-            onValueChange =  onValueChange,
-            keyboardOptions =  KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
+        NewPasswordField(
+            label = R.string.new_password,
+            leadingIcon = Icons.Default.Lock,
+            value = loginUiState.newPassword,
+            onValueChange = onNewPasswordValueChange,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
+        Text(
+            text = stringResource(R.string.confirm_new_password),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+        )
+        Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)))
+        NewPasswordField(
+            label = R.string.new_password,
+            leadingIcon = Icons.Default.Lock,
+            value = loginUiState.confirmNewPassword,
+            onValueChange = onConfirmNewPasswordValueChange,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
             ),
             modifier = Modifier
@@ -65,7 +83,7 @@ fun RegistrationScreen(
         )
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
         Button(
-            onClick = { onSendButtonClick() },
+            onClick = { onSendClick() },
             modifier = Modifier
                 .align(Alignment.End)
                 .width(dimensionResource(id = R.dimen.half_screen_size))
@@ -78,25 +96,11 @@ fun RegistrationScreen(
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
             )
         }
-        Spacer(modifier = Modifier.weight(1f))
-        Column {
-            Text(
-                text = stringResource(R.string.no_registration),
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
-            )
-            Text(
-                text = stringResource(R.string.instructions_to_no_registration),
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Justify,
-            )
-        }
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(5f))
     }
 }
 @Composable
-fun RegistrationField(
+fun NewPasswordField(
     @StringRes label: Int,
     leadingIcon: ImageVector,
     value: String,
@@ -104,7 +108,6 @@ fun RegistrationField(
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier
 ) {
-
     TextField(
         value = value,
         leadingIcon = { Icon(imageVector = leadingIcon, null) },
@@ -118,12 +121,13 @@ fun RegistrationField(
 
 @Preview(showBackground = true)
 @Composable
-fun RegistrationLightThemePreview() {
+fun NewPasswordLightThemePreview() {
     CampusConnectTheme (darkTheme = false){
-        RegistrationScreen(
-            loginUiState = LoginUiState("", ""),
-            onSendButtonClick = {},
-            onValueChange = {},
+        NewPasswordScreen(
+            loginUiState = AuthUiState(),
+            onNewPasswordValueChange = {},
+            onConfirmNewPasswordValueChange = {},
+            onSendClick = {},
             modifier = Modifier
                 .fillMaxSize()
                 .padding(dimensionResource(id = R.dimen.padding_medium))
@@ -132,15 +136,17 @@ fun RegistrationLightThemePreview() {
 }
 @Preview(showBackground = true)
 @Composable
-fun RegistrationDarkThemePreview() {
+fun NewPasswordDarkThemePreview() {
     CampusConnectTheme (darkTheme = true){
-        RegistrationScreen(
-            loginUiState = LoginUiState(),
-            onSendButtonClick = {},
-            onValueChange = {},
+        NewPasswordScreen(
+            loginUiState = AuthUiState(),
+            onNewPasswordValueChange = {},
+            onConfirmNewPasswordValueChange = {},
+            onSendClick = {},
             modifier = Modifier
                 .fillMaxSize()
                 .padding(dimensionResource(id = R.dimen.padding_medium))
         )
     }
 }
+

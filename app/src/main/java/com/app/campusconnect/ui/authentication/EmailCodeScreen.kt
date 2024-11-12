@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui.loginScreens
+package com.app.campusconnect.ui.authentication
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -25,12 +25,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
-import com.app.campusconnect.data.LoginUiState
+import com.app.campusconnect.data.AuthUiState
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun EmailCodeScreen(
-    loginUiState: LoginUiState,
+    loginUiState: AuthUiState,
     onVerifyClick: () -> Unit,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -136,7 +136,7 @@ fun EmailCodeField(
 fun EmailCodeLightThemePreview() {
     CampusConnectTheme (darkTheme = false){
         EmailCodeScreen(
-            loginUiState = LoginUiState(),
+            loginUiState = AuthUiState(),
             onVerifyClick = {},
             onValueChange = {},
             modifier = Modifier
@@ -148,7 +148,7 @@ fun EmailCodeLightThemePreview() {
 fun EmailCodeDarkThemePreview() {
     CampusConnectTheme (darkTheme = true){
         EmailCodeScreen(
-            loginUiState = LoginUiState(),
+            loginUiState = AuthUiState(),
             onVerifyClick = {},
             onValueChange = {},
             modifier = Modifier

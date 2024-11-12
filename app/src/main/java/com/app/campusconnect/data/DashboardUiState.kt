@@ -1,5 +1,5 @@
 package com.app.campusconnect.data
 
-data class CampusConnectUiState(
+data class DashboardUiState(
     val eventList: List<Event> = DataSource.loadEvents(),
 )

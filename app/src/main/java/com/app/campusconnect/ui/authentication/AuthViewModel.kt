@@ -1,16 +1,27 @@
-package com.app.campusconnect.ui
+package com.app.campusconnect.ui.authentication
 
 import androidx.lifecycle.ViewModel
-import com.app.campusconnect.data.LoginUiState
+import androidx.lifecycle.viewModelScope
+import com.app.campusconnect.data.AuthUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+class AuthViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(LoginUiState())
-    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(AuthUiState())
+    val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
+
+    private val _isUserLoggedIn = MutableStateFlow(false)
+    val isUserLoggedIn: StateFlow<Boolean> = _isUserLoggedIn.asStateFlow()
+
+    fun updateLoginStatus(isLoggedIn: Boolean){
+        viewModelScope.launch {
+            _isUserLoggedIn.emit(isLoggedIn)
+        }
+    }
 
     fun setMatriculate(matriculate: String) {
         _uiState.update { currentState ->

@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui
+package com.app.campusconnect.ui.dashboard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
-import com.app.campusconnect.data.CampusConnectUiState
+import com.app.campusconnect.data.DashboardUiState
 import com.app.campusconnect.data.Event
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
@@ -39,7 +39,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ){
 
-    val campusConnectUiState = CampusConnectUiState()
+    val campusConnectUiState = DashboardUiState()
     Column (
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Bottom,

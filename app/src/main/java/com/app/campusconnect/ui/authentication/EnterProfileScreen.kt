@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui.loginScreens
+package com.app.campusconnect.ui.authentication
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -37,12 +37,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
-import com.app.campusconnect.data.LoginUiState
+import com.app.campusconnect.data.AuthUiState
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun EnterProfileScreen(
-    loginUiState: LoginUiState,
+    loginUiState: AuthUiState,
     onAccessClick: () -> Unit,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -173,7 +173,7 @@ fun EnterPasswordField(
 fun EnterProfileLightThemePreview() {
     CampusConnectTheme (darkTheme = false){
         EnterProfileScreen(
-            loginUiState = LoginUiState(),
+            loginUiState = AuthUiState(),
             onAccessClick = {},
             onValueChange = {},
             modifier = Modifier
@@ -187,7 +187,7 @@ fun EnterProfileLightThemePreview() {
 fun EnterProfileDarkThemePreview() {
     CampusConnectTheme (darkTheme = true){
         EnterProfileScreen(
-            loginUiState = LoginUiState(),
+            loginUiState = AuthUiState(),
             onAccessClick = {},
             onValueChange = {},
             modifier = Modifier

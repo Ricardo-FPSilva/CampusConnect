@@ -1,16 +1,16 @@
 package com.app.campusconnect.data
 
-data class LoginUiState(
+data class AuthUiState(
 
     val matricula: String = "",
 
     val senha: String = "",
 
-    val email: String = "ricardo.silvamain@gmail.com",
+    val email: String = "",
 
     val emailCode: String = "",
 
-    val nome: String = "Ricardo",
+    val nome: String = "",
 
     val confirmaSenha: String = "",
 
@@ -18,11 +18,13 @@ data class LoginUiState(
 
     val confirmNewPassword: String = "",
 
-    val curso: String = "Ciência da Computação",
+    val curso: String = "",
 
     val matriculaError: Int? = null,
 
     val senhaError: Int? = null,
+
+    val isUserLoggedIn: Boolean = false,
 
     val isLoading: Boolean = false,
 

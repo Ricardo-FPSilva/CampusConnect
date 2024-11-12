@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui
+package com.app.campusconnect.ui.authentication
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

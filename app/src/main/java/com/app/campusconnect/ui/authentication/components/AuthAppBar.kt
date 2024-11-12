@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui.components
+package com.app.campusconnect.ui.authentication.components
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,13 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import com.app.campusconnect.CampusConnectScreen
 import com.app.campusconnect.R
+import com.app.campusconnect.ui.authentication.AuthScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginAppBar(
-    currentScreen: CampusConnectScreen,
+fun AuthAppBar(
+    currentScreen: AuthScreen,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
