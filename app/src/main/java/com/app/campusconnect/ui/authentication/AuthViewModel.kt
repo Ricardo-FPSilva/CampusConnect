@@ -2,7 +2,7 @@ package com.app.campusconnect.ui.authentication
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.campusconnect.data.AuthUiState
+import com.app.campusconnect.data.uistate.AuthUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

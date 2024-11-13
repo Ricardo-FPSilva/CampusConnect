@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
-import com.app.campusconnect.data.DashboardUiState
+import com.app.campusconnect.data.uistate.DashboardUiState
 import com.app.campusconnect.data.Event
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 

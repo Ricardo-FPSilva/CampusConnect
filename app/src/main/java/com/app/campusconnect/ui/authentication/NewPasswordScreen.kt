@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
-import com.app.campusconnect.data.AuthUiState
+import com.app.campusconnect.data.uistate.AuthUiState
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable

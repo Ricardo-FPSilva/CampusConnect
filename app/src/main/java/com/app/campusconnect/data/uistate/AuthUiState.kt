@@ -1,4 +1,4 @@
-package com.app.campusconnect.data
+package com.app.campusconnect.data.uistate
 
 data class AuthUiState(
 
