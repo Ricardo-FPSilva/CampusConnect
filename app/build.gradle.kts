@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.okhttp)
     implementation(libs.converter.gson)
+    implementation(libs.androidx.constraintlayout.compose)
 
     testImplementation(libs.junit)
 

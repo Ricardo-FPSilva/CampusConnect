@@ -1,8 +1,13 @@
 package com.app.campusconnect.data.uistate
 
-import com.app.campusconnect.data.DataSource
-import com.app.campusconnect.data.Event
+import com.app.campusconnect.network.Event
 
-data class DashboardUiState(
-    val eventList: List<Event> = DataSource.loadEvents(),
-)
+sealed interface DashboardUiState {
+    data object Loading : DashboardUiState
+    data class Success(
+        val eventList: List<Event>,
+    ) : DashboardUiState
+    data class Error(
+        val message: String
+    ) : DashboardUiState
+}

@@ -1,35 +1,48 @@
 package com.app.campusconnect.data
 
-import com.app.campusconnect.data.repository.AuthRepository
-import com.app.campusconnect.data.repository.NetworkAuthRepository
-import com.app.campusconnect.network.CampusConnectApiService
+import android.util.Log
+import com.app.campusconnect.data.repository.DashboardRepository
+import com.app.campusconnect.data.repository.NetworkDashboardRepository
+import com.app.campusconnect.network.DashboardApiService
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 interface AppContainer {
-    val authRepository: AuthRepository
+//    val authRepository: AuthRepository
+    val dashboardRepository: DashboardRepository
 }
 
 class DefaultAppContainer : AppContainer {
 
-    private val baseUrl = "https://api.example.com/"
+    private val baseUrl = "http://192.168.10.12:8080"
 
-    private val gson = GsonBuilder()
+    private val gson: Gson = GsonBuilder()
         .setLenient()
         .create()
 
+
     private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create(gson))
+        .baseUrl(baseUrl)
         .build()
 
-    private val retrofitService: CampusConnectApiService by lazy {
-        retrofit.create(CampusConnectApiService::class.java)
+    private val retrofitService: DashboardApiService by lazy {
+        retrofit.create(DashboardApiService::class.java)
     }
 
-    override val authRepository: AuthRepository by lazy {
-        NetworkAuthRepository(retrofitService)
+    override val dashboardRepository: DashboardRepository by lazy {
+        NetworkDashboardRepository(retrofitService)
     }
+
+//    private val authRetrofitService: AuthApiService by lazy {
+//        retrofit.create(AuthApiService::class.java)
+//    }
+//
+//    override val authRepository: AuthRepository by lazy {
+//        NetworkAuthRepository(authRetrofitService)
+//    }
+
 
 }
