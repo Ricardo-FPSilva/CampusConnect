@@ -38,5 +38,6 @@
     <string name="date">Data: %1$s</string>
     <string name="event_details">Event Details</string>
     <string name="event_creation">Event Creation</string>
+    <string name="my_events">My Events</string>
 
 </resources>

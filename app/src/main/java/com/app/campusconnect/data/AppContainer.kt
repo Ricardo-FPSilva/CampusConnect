@@ -16,7 +16,7 @@ interface AppContainer {
 
 class DefaultAppContainer : AppContainer {
 
-    private val baseUrl = "http://192.168.10.12:8080"
+    private val baseUrl = "http://192.168.10.22:8080"
 
     private val gson: Gson = GsonBuilder()
         .setLenient()

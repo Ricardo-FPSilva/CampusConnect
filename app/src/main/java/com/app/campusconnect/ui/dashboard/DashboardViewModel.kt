@@ -61,6 +61,15 @@ class DashboardViewModel(
         _selectedEvent.update { event }
     }
 
+    fun setSelectedMyEvents(isSelected: Boolean) {
+        _uiState.update {
+            if (it is DashboardUiState.Success) {
+                it.copy(isSelectedMyEvents = isSelected)
+            } else {
+                it
+            }
+        }
+    }
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

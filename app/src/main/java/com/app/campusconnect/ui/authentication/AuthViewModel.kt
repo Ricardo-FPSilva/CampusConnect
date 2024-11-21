@@ -14,7 +14,7 @@ class AuthViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
-    private val _isUserLoggedIn = MutableStateFlow(false)
+    private val _isUserLoggedIn = MutableStateFlow(true)
     val isUserLoggedIn: StateFlow<Boolean> = _isUserLoggedIn.asStateFlow()
 
     fun updateLoginStatus(isLoggedIn: Boolean){

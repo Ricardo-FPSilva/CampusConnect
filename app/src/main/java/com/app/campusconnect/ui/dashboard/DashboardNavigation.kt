@@ -23,7 +23,8 @@ import com.app.campusconnect.ui.dashboard.components.EventCreationFab
 enum class DashboardScreen (@StringRes val title: Int){
     Home(title = R.string.home),
     EventDetails(title = R.string.event_details),
-    EventCreation(title = R.string.event_creation)
+    EventCreation(title = R.string.event_creation),
+    MyEvents(title = R.string.my_events)
 }
 
 @Composable
@@ -40,7 +41,12 @@ fun DashboardNavHost(
             DashboardTopAppBar(currentScreen = currentScreen)
         },
         bottomBar = {
-            DashboardBottomAppBar()
+            DashboardBottomAppBar(
+                currentScreen = currentScreen,
+                onTabSelected = { newScreen ->
+                    navController.navigate(newScreen.name)
+                }
+            )
         },
         floatingActionButton = {
             EventCreationFab(
@@ -50,6 +56,7 @@ fun DashboardNavHost(
             )
         }
     ) { innerPadding ->
+        val uiState by dashboardViewModel.uiState.collectAsState()
         NavHost(
             navController = navController,
             startDestination = DashboardScreen.Home.name,
@@ -59,7 +66,7 @@ fun DashboardNavHost(
                 route = DashboardScreen.Home.name,
             ) {
                 HomeScreen(
-                    dashboardUiState = dashboardViewModel.uiState,
+                    uiState = uiState,
                     onEventClick = { event ->
                         dashboardViewModel.setSelectedEvent(event)
                         if (dashboardViewModel.selectedEvent.value != null){
@@ -91,6 +98,29 @@ fun DashboardNavHost(
                 EventCreationScreen(
                     modifier = Modifier
                         .fillMaxSize()
+                )
+            }
+            composable (
+                route = DashboardScreen.MyEvents.name,
+            ){
+                MyEventsScreen(
+                    uiState = uiState,
+                    onSelectionSub = { isSelected ->
+                        dashboardViewModel.setSelectedMyEvents(isSelected)
+                    },
+                    onSelectionCreate = { isSelected ->
+                        dashboardViewModel.setSelectedMyEvents(!isSelected)
+                    },
+                    onEventClick = { event ->
+                        dashboardViewModel.setSelectedEvent(event)
+                        if (dashboardViewModel.selectedEvent.value != null){
+                            navController.navigate(DashboardScreen.EventDetails.name)
+                        }
+                    },
+                    retryAction = { dashboardViewModel.getEventsList() },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(dimensionResource(id = R.dimen.padding_medium))
                 )
             }
         }

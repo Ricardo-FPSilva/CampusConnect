@@ -15,10 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -39,24 +37,23 @@ import com.app.campusconnect.R
 import com.app.campusconnect.data.uistate.DashboardUiState
 import com.app.campusconnect.network.Event
 import com.app.campusconnect.network.User
+import com.app.campusconnect.ui.dashboard.components.ErrorScreen
+import com.app.campusconnect.ui.dashboard.components.LoadingScreen
 import com.app.campusconnect.ui.theme.CampusConnectTheme
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun HomeScreen(
-    dashboardUiState: StateFlow<DashboardUiState>,
+    uiState: DashboardUiState,
     onEventClick: (Event) -> Unit,
     retryAction: () -> Unit,
     modifier: Modifier = Modifier
 ){
-    val uiState by dashboardUiState.collectAsState()
     Column (modifier = modifier){
-        when (val currentState = uiState) {
+        when (uiState) {
             is DashboardUiState.Loading -> LoadingScreen(modifier = modifier)
             is DashboardUiState.Success -> ListEventsScreen(
-                eventList = currentState.eventList,
+                eventList = uiState.eventList,
                 onEventClick = onEventClick,
-                modifier = modifier
             )
             is DashboardUiState.Error -> ErrorScreen(
                 retryAction = retryAction,
@@ -65,45 +62,6 @@ fun HomeScreen(
         }
     }
 
-}
-
-@Composable
-fun LoadingScreen(
-    modifier: Modifier
-){
-    Column (
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.padding_small))
-        )
-    }
-
-}
-@Composable
-fun ErrorScreen(
-    retryAction: () -> Unit,
-    modifier: Modifier
-){
-    Column (
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Error",
-            style = MaterialTheme.typography.displayLarge
-        )
-        Button(
-            onClick = retryAction,
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text("Retry")
-        }
-    }
 }
 
 @Composable
@@ -155,6 +113,31 @@ fun ListEventsScreen(
 
 
 @Composable
+fun EventList(
+    eventList: List<Event>,
+    onEventClick: (Event) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column {
+        Text(
+            text = "Categoria",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+        )
+        LazyRow {
+            items(eventList){ item: Event ->
+                    EventCard(
+                        event = item,
+                        onEventClick = onEventClick,
+                        modifier = modifier
+                    )
+
+            }
+        }
+    }
+
+}
+@Composable
 fun EventCard(
     event: Event,
     onEventClick: (Event) -> Unit,
@@ -190,31 +173,6 @@ fun EventCard(
     }
 }
 
-@Composable
-fun EventList(
-    eventList: List<Event>,
-    onEventClick: (Event) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column {
-        Text(
-            text = "Categoria",
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-        )
-        LazyRow {
-            items(eventList){ item: Event ->
-                    EventCard(
-                        event = item,
-                        onEventClick = onEventClick,
-                        modifier = modifier
-                    )
-
-            }
-        }
-    }
-
-}
 
 
 

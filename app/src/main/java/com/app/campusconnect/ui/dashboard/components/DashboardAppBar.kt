@@ -43,6 +43,9 @@ fun DashboardTopAppBar (
 
 @Composable
 fun DashboardBottomAppBar (
+    currentScreen: DashboardScreen,
+    onTabSelected: (DashboardScreen) -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     BottomAppBar (
         containerColor = MaterialTheme.colorScheme.primary,
@@ -53,16 +56,22 @@ fun DashboardBottomAppBar (
                 .fillMaxSize()
         ) {
             ButtonAppBar(
+                "Home",
+                onClick = { onTabSelected(DashboardScreen.Home) },
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxSize()
             )
             ButtonAppBar(
+                "Meus Eventos",
+                onClick = { onTabSelected(DashboardScreen.MyEvents) },
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxSize()
             )
             ButtonAppBar(
+                "Perfil",
+                onClick = { },
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxSize()
@@ -74,10 +83,12 @@ fun DashboardBottomAppBar (
 
 @Composable
 fun ButtonAppBar(
+    text: String,
+    onClick: () -> Unit = {},
     modifier: Modifier
 ) {
     Button(
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             contentColor = MaterialTheme.colorScheme.onPrimary
         ),
@@ -91,8 +102,8 @@ fun ButtonAppBar(
         modifier = modifier
     ) {
         Text(
-            text = "Home",
-            style = MaterialTheme.typography.displaySmall,
+            text = text,
+            style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -111,7 +122,10 @@ fun DashboardAppBarPreview() {
                 DashboardTopAppBar(currentScreen = DashboardScreen.Home)
             },
             bottomBar = {
-                DashboardBottomAppBar()
+                DashboardBottomAppBar(
+                    currentScreen = DashboardScreen.Home,
+                    onTabSelected = {}
+                )
             }
         ) { innerPadding ->
             Column (modifier = Modifier.padding(innerPadding)) {

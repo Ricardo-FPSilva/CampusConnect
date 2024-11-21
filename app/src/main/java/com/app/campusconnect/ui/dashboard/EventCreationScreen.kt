@@ -181,18 +181,24 @@ fun EventDateInput(
     var showDialog by remember { mutableStateOf(false) }
 
 
-    OutlinedTextField(
-        value = selectedDate,
-        onValueChange = { },
-        label = { Text("Data") },
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { showDialog = true },
-        readOnly = true
-    )
+    Row {
+        OutlinedTextField(
+            value = selectedDate,
+            onValueChange = { },
+            label = { Text("Data") },
+            modifier = modifier
+                .weight(1f)
+                .clickable { showDialog = true },
+            readOnly = true
+        )
 
-    Button(onClick = { showDialog = true }) {
-        Text("Selecionar Data")
+        Button(
+            onClick = { showDialog = true },
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+        ) {
+            Text("Selecionar Data")
+        }
     }
 
     if (showDialog) {
