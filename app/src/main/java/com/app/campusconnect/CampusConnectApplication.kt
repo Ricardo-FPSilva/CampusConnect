@@ -1,13 +1,12 @@
 package com.app.campusconnect
 
 import android.app.Application
-import com.app.campusconnect.data.AppContainer
-import com.app.campusconnect.data.DefaultAppContainer
+import dagger.hilt.android.HiltAndroidApp
 
+
+@HiltAndroidApp
 class CampusConnectApplication : Application() {
-    lateinit var container: AppContainer
     override fun onCreate() {
         super.onCreate()
-        container = DefaultAppContainer()
     }
 }

@@ -25,17 +25,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
-import com.app.campusconnect.data.uistate.AuthUiState
+import com.app.campusconnect.data.uistate.authentication.AuthFormState
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun EmailCodeScreen(
-    loginUiState: AuthUiState,
+    authFormState: AuthFormState,
     onVerifyClick: () -> Unit,
-    onValueChange: (String) -> Unit,
+    onValueChange: (AuthFormState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column (
+    Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
         modifier = modifier
@@ -43,7 +43,7 @@ fun EmailCodeScreen(
             .padding(dimensionResource(id = R.dimen.padding_medium))
 
     ) {
-        Column (
+        Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -53,7 +53,7 @@ fun EmailCodeScreen(
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                text = loginUiState.email,
+                text = authFormState.email, // Acessando email do authFormState
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.End)
@@ -67,8 +67,10 @@ fun EmailCodeScreen(
             )
             EmailCodeField(
                 label = R.string.code_format,
-                value = loginUiState.emailCode,
-                onValueChange = onValueChange,
+                value = authFormState.emailCode, // Acessando emailCode do authFormState
+                onValueChange = { newValue ->
+                    onValueChange(authFormState.copy(emailCode = newValue))
+                },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
@@ -113,6 +115,7 @@ fun EmailCodeScreen(
         Spacer(modifier = Modifier.weight(2f))
     }
 }
+
 @Composable
 fun EmailCodeField(
     @StringRes label: Int,
@@ -134,21 +137,22 @@ fun EmailCodeField(
 @Preview(showBackground = true)
 @Composable
 fun EmailCodeLightThemePreview() {
-    CampusConnectTheme (darkTheme = false){
+    CampusConnectTheme(darkTheme = false) {
         EmailCodeScreen(
-            loginUiState = AuthUiState(),
+            authFormState = AuthFormState(),
             onVerifyClick = {},
             onValueChange = {},
             modifier = Modifier
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun EmailCodeDarkThemePreview() {
-    CampusConnectTheme (darkTheme = true){
+    CampusConnectTheme(darkTheme = true) {
         EmailCodeScreen(
-            loginUiState = AuthUiState(),
+            authFormState = AuthFormState(),
             onVerifyClick = {},
             onValueChange = {},
             modifier = Modifier

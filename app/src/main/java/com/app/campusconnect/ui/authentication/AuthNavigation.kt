@@ -17,8 +17,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.app.campusconnect.R
+import com.app.campusconnect.data.uistate.authentication.AuthUiState
 import com.app.campusconnect.ui.authentication.components.AuthAppBar
-import com.app.campusconnect.ui.dashboard.DashboardScreen
 
 enum class AuthScreen (@StringRes val title: Int){
     Welcome(title = R.string.app_name),
@@ -32,11 +32,15 @@ enum class AuthScreen (@StringRes val title: Int){
 fun AuthNavHost(
     viewModel: AuthViewModel = viewModel(),
     navController: NavHostController = rememberNavController(),
-){
+) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = AuthScreen.valueOf(
         backStackEntry?.destination?.route ?: AuthScreen.Welcome.name
     )
+
+    val authFormState by viewModel.authFormState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
+
     Scaffold(
         topBar = {
             AuthAppBar(
@@ -46,79 +50,64 @@ fun AuthNavHost(
             )
         },
     ) { innerPadding ->
-        val uiState by viewModel.uiState.collectAsState()
-
         NavHost(
             navController = navController,
             startDestination = AuthScreen.Welcome.name,
             modifier = Modifier.padding(innerPadding)
-        ){
-            composable(
-                route = AuthScreen.Welcome.name,
-            ) {
+        ) {
+            composable(route = AuthScreen.Welcome.name) {
                 WelcomeScreen(
-                    onStartedButtonClick = {
-                        navController.navigate(AuthScreen.Registration.name)
-                    },
+                    onStartedButtonClick = { navController.navigate(AuthScreen.Registration.name) },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(dimensionResource(id = R.dimen.padding_medium))
                 )
             }
-            composable(
-                route = AuthScreen.Registration.name,
-            ) {
+            composable(route = AuthScreen.Registration.name) {
                 RegistrationScreen(
-                    loginUiState = uiState,
-                    onSendButtonClick = {
-                        navController.navigate(AuthScreen.EmailCode.name)
+                    authFormState = authFormState,
+                    onSendButtonClick = { navController.navigate(AuthScreen.EmailCode.name) },
+                    onValueChange = { updatedState ->
+                        viewModel.updateAuthFormState(updatedState)
                     },
-                    onValueChange = { viewModel.setMatriculate(it) },
                     modifier = Modifier
                         .fillMaxHeight()
                         .padding(dimensionResource(id = R.dimen.padding_medium))
                 )
             }
-            composable(
-                route = AuthScreen.EmailCode.name,
-
-                ) {
+            composable(route = AuthScreen.EmailCode.name) {
                 EmailCodeScreen(
-                    loginUiState = uiState,
-                    onVerifyClick = {
-                        navController.navigate(AuthScreen.NewPassword.name)
+                    authFormState = authFormState,
+                    onVerifyClick = { navController.navigate(AuthScreen.NewPassword.name) },
+                    onValueChange = { updatedState ->
+                        viewModel.updateAuthFormState(updatedState)
                     },
-                    onValueChange = { viewModel.setEmailCode(it) },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(dimensionResource(id = R.dimen.padding_medium))
                 )
             }
-            composable(
-                route = AuthScreen.NewPassword.name,
-
-                ) {
+            composable(route = AuthScreen.NewPassword.name) {
                 NewPasswordScreen(
-                    loginUiState = uiState,
-                    onSendClick = {
-                        navController.navigate( AuthScreen.EnterProfile.name)
+                    authFormState = authFormState,
+                    onSendClick = { navController.navigate(AuthScreen.EnterProfile.name) },
+                    onValueChange = { updatedState ->
+                        viewModel.updateAuthFormState(updatedState)
                     },
-                    onNewPasswordValueChange = { viewModel.setNewPassword(it) },
-                    onConfirmNewPasswordValueChange = { viewModel.setConfirmNewPassword(it) },
                     modifier = Modifier
                         .fillMaxHeight()
                         .padding(dimensionResource(id = R.dimen.padding_medium))
                 )
             }
-            composable(
-                route = AuthScreen.EnterProfile.name,
-            ) {
+            composable(route = AuthScreen.EnterProfile.name) {
                 EnterProfileScreen(
-                    loginUiState = uiState,
-                    onAccessClick = {
-                        viewModel.updateLoginStatus(true)
+                    authUiState = uiState, // Passando o uiState
+                    authFormState = authFormState,
+                    onAccessClick = { viewModel.authenticateUser() },
+                    onValueChange = { updatedState ->
+                        viewModel.updateAuthFormState(updatedState)
                     },
-                    onValueChange = { viewModel.setPassword(it) },
+                    retryAction = { viewModel.updateUiState(AuthUiState.Success()) }, // Função para tentar novamente
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(dimensionResource(id = R.dimen.padding_medium))

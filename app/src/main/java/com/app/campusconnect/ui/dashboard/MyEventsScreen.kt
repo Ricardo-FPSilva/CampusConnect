@@ -28,9 +28,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
-import com.app.campusconnect.data.uistate.DashboardUiState
-import com.app.campusconnect.network.Event
-import com.app.campusconnect.network.User
+import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
+import com.app.campusconnect.data.uistate.dashboard.DashboardUiState
+import com.app.campusconnect.network.models.Event
+import com.app.campusconnect.network.models.User
 import com.app.campusconnect.ui.dashboard.components.ErrorScreen
 import com.app.campusconnect.ui.dashboard.components.LoadingScreen
 import com.app.campusconnect.ui.theme.CampusConnectTheme
@@ -38,33 +39,35 @@ import com.app.campusconnect.ui.theme.CampusConnectTheme
 @Composable
 fun MyEventsScreen(
     uiState: DashboardUiState,
+    dashboardFormState: DashboardFormState, // Adicionado dashboardFormState
     onSelectionSub: (Boolean) -> Unit,
     onSelectionCreate: (Boolean) -> Unit,
     onEventClick: (Event) -> Unit,
     retryAction: () -> Unit,
     modifier: Modifier = Modifier
-){
-    Column (
+) {
+    Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-    ){
+    ) {
         when (uiState) {
             is DashboardUiState.Loading -> LoadingScreen(modifier = modifier)
             is DashboardUiState.Success -> SubOrCreateScreen(
-                isSelected = uiState.isSelectedMyEvents,
+                isSelected = dashboardFormState.isSelectedMyEvents, // Acessa isSelectedMyEvents do dashboardFormState
                 onSelectionSub = onSelectionSub,
                 onSelectionCreate = onSelectionCreate,
                 onEventClick = onEventClick,
             )
             is DashboardUiState.Error -> ErrorScreen(
+                error = uiState.message,
                 retryAction = retryAction,
                 modifier = modifier
             )
         }
     }
-
 }
+
 
 @Composable
 fun SubOrCreateScreen (

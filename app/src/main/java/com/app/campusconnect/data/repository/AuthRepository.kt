@@ -1,15 +1,19 @@
 package com.app.campusconnect.data.repository
 
 import com.app.campusconnect.network.AuthApiService
-import com.app.campusconnect.network.User
+import com.app.campusconnect.network.models.LoginRequest
+import com.app.campusconnect.network.models.LoginResponse
+import com.app.campusconnect.network.models.User
 
 
 interface AuthRepository {
-    suspend fun getLogin(registration: String, password: String): User
+    suspend fun getLogin(loginRequest: LoginRequest): LoginResponse
 }
 
 class NetworkAuthRepository(
     private val authApiService: AuthApiService
 ) : AuthRepository {
-    override suspend fun getLogin(registration: String, password: String): User = authApiService.getLogin(registration, password)
+    override suspend fun getLogin(loginRequest: LoginRequest): LoginResponse {
+        return authApiService.getLogin(loginRequest)
+    }
 }

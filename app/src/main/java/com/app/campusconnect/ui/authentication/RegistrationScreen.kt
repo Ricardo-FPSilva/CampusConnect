@@ -29,17 +29,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
-import com.app.campusconnect.data.uistate.AuthUiState
+import com.app.campusconnect.data.uistate.authentication.AuthFormState
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun RegistrationScreen(
-    loginUiState: AuthUiState,
+    authFormState: AuthFormState,
     onSendButtonClick: () -> Unit,
-    onValueChange: (String) -> Unit,
+    onValueChange: (AuthFormState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column (
+    Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
         modifier = modifier
@@ -54,9 +54,11 @@ fun RegistrationScreen(
         RegistrationField(
             label = R.string.registration,
             leadingIcon = Icons.Default.AccountCircle,
-            value = loginUiState.matricula,
-            onValueChange =  onValueChange,
-            keyboardOptions =  KeyboardOptions.Default.copy(
+            value = authFormState.registrationNumber,
+            onValueChange = { newValue ->
+                onValueChange(authFormState.copy(registrationNumber = newValue))
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
@@ -95,6 +97,7 @@ fun RegistrationScreen(
         Spacer(modifier = Modifier.weight(1f))
     }
 }
+
 @Composable
 fun RegistrationField(
     @StringRes label: Int,
@@ -104,7 +107,6 @@ fun RegistrationField(
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier
 ) {
-
     TextField(
         value = value,
         leadingIcon = { Icon(imageVector = leadingIcon, null) },
@@ -119,9 +121,9 @@ fun RegistrationField(
 @Preview(showBackground = true)
 @Composable
 fun RegistrationLightThemePreview() {
-    CampusConnectTheme (darkTheme = false){
+    CampusConnectTheme(darkTheme = false) {
         RegistrationScreen(
-            loginUiState = AuthUiState("", ""),
+            authFormState = AuthFormState(),
             onSendButtonClick = {},
             onValueChange = {},
             modifier = Modifier
@@ -130,12 +132,13 @@ fun RegistrationLightThemePreview() {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun RegistrationDarkThemePreview() {
-    CampusConnectTheme (darkTheme = true){
+    CampusConnectTheme(darkTheme = true) {
         RegistrationScreen(
-            loginUiState = AuthUiState(),
+            authFormState = AuthFormState(),
             onSendButtonClick = {},
             onValueChange = {},
             modifier = Modifier

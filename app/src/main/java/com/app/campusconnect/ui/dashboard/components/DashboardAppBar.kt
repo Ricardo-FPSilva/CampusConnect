@@ -57,7 +57,8 @@ fun DashboardBottomAppBar (
         ) {
             ButtonAppBar(
                 "Home",
-                onClick = { onTabSelected(DashboardScreen.Home) },
+                onClick = {
+                    onTabSelected(DashboardScreen.Home) },
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxSize()

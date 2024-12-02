@@ -11,9 +11,9 @@ import com.app.campusconnect.ui.dashboard.DashboardNavHost
 @Composable
 fun AppNavigation() {
     val loginViewModel: AuthViewModel = viewModel()
-    val isUserLoggedIn by loginViewModel.isUserLoggedIn.collectAsState()
+    val authFormState by loginViewModel.authFormState.collectAsState()
 
-    if (isUserLoggedIn) {
+    if (authFormState.isUserLoggedIn) {
         DashboardNavHost()
     } else {
         AuthNavHost()

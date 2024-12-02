@@ -1,7 +1,7 @@
 package com.app.campusconnect.data.repository
 
 import com.app.campusconnect.network.DashboardApiService
-import com.app.campusconnect.network.Event
+import com.app.campusconnect.network.models.Event
 
 interface DashboardRepository {
     suspend fun getEvents(): List<Event>

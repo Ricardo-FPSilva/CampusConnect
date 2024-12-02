@@ -32,6 +32,7 @@ fun LoadingScreen(
 }
 @Composable
 fun ErrorScreen(
+    error: String,
     retryAction: () -> Unit,
     modifier: Modifier
 ){
@@ -43,6 +44,10 @@ fun ErrorScreen(
         Text(
             text = "Error",
             style = MaterialTheme.typography.displayLarge
+        )
+        Text(
+            text = error,
+            style = MaterialTheme.typography.titleSmall,
         )
         Button(
             onClick = retryAction,

@@ -37,28 +37,57 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
-import com.app.campusconnect.data.uistate.AuthUiState
+import com.app.campusconnect.data.uistate.authentication.AuthFormState
+import com.app.campusconnect.data.uistate.authentication.AuthUiState
+import com.app.campusconnect.ui.dashboard.components.ErrorScreen
+import com.app.campusconnect.ui.dashboard.components.LoadingScreen
 import com.app.campusconnect.ui.theme.CampusConnectTheme
+
 
 @Composable
 fun EnterProfileScreen(
-    loginUiState: AuthUiState,
+    authUiState: AuthUiState,
+    authFormState: AuthFormState,
     onAccessClick: () -> Unit,
-    onValueChange: (String) -> Unit,
+    onValueChange: (AuthFormState) -> Unit,
+    retryAction: () -> Unit,
     modifier: Modifier = Modifier,
-){
-    Column (
+) {
+    when (authUiState) {
+        is AuthUiState.Loading -> LoadingScreen(modifier = modifier)
+        is AuthUiState.Success -> LoginFormScreen(
+            authFormState = authFormState,
+            onAccessClick = onAccessClick,
+            onValueChange = onValueChange,
+            modifier = modifier
+        )
+        is AuthUiState.Error -> ErrorScreen(
+            error = authUiState.message,
+            retryAction = retryAction,
+            modifier = modifier
+        )
+    }
+}
+
+@Composable
+fun LoginFormScreen(
+    authFormState: AuthFormState,
+    onAccessClick: () -> Unit,
+    onValueChange: (AuthFormState) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
-    ){
-        Row (
+        modifier = modifier.fillMaxSize() // Adicionado fillMaxSize() aqui
+    ) {
+        Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
-        ){
+        ) {
             Spacer(modifier = Modifier.weight(1f))
-            Box (
+            Box(
                 modifier = Modifier
                     .size(dimensionResource(id = R.dimen.half_screen_size))
             ) {
@@ -73,25 +102,25 @@ fun EnterProfileScreen(
                 )
             }
             Spacer(modifier = Modifier.weight(2f))
-            Column (
+            Column(
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
-            ){
+            ) {
                 Text(
-                    text = stringResource(R.string.greeting_name, loginUiState.nome) ,
+                    text = stringResource(R.string.greeting_name, authFormState.name),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
                 )
                 Text(
-                    text = loginUiState.matricula,
+                    text = authFormState.registrationNumber,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
                 )
                 Text(
-                    text = loginUiState.curso,
+                    text = authFormState.course,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
@@ -109,8 +138,10 @@ fun EnterProfileScreen(
         EnterPasswordField(
             label = R.string.password,
             leadingIcon = Icons.Default.Lock,
-            value = loginUiState.senha,
-            onValueChange = onValueChange,
+            value = authFormState.password,
+            onValueChange = { newValue ->
+                onValueChange(authFormState.copy(password = newValue))
+            },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
@@ -148,6 +179,7 @@ fun EnterProfileScreen(
         Spacer(modifier = Modifier.weight(3f))
     }
 }
+
 @Composable
 fun EnterPasswordField(
     @StringRes label: Int,
@@ -171,25 +203,13 @@ fun EnterPasswordField(
 @Preview(showBackground = true)
 @Composable
 fun EnterProfileLightThemePreview() {
-    CampusConnectTheme (darkTheme = false){
+    CampusConnectTheme(darkTheme = false) {
         EnterProfileScreen(
-            loginUiState = AuthUiState(),
+            authUiState = AuthUiState.Success(), // Passando AuthUiState.Success()
+            authFormState = AuthFormState(),
             onAccessClick = {},
             onValueChange = {},
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(dimensionResource(id = R.dimen.padding_medium))
-        )
-    }
-}
-@Preview(showBackground = true)
-@Composable
-fun EnterProfileDarkThemePreview() {
-    CampusConnectTheme (darkTheme = true){
-        EnterProfileScreen(
-            loginUiState = AuthUiState(),
-            onAccessClick = {},
-            onValueChange = {},
+            retryAction = {},
             modifier = Modifier
                 .fillMaxSize()
                 .padding(dimensionResource(id = R.dimen.padding_medium))
@@ -197,3 +217,19 @@ fun EnterProfileDarkThemePreview() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun EnterProfileDarkThemePreview() {
+    CampusConnectTheme(darkTheme = true) {
+        EnterProfileScreen(
+            authUiState = AuthUiState.Success(), // Passando AuthUiState.Success()
+            authFormState = AuthFormState(),
+            onAccessClick = {},
+            onValueChange = {},
+            retryAction = {},
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+        )
+    }
+}

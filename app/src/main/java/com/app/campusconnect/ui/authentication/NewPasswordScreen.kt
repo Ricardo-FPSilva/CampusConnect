@@ -28,22 +28,21 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
-import com.app.campusconnect.data.uistate.AuthUiState
+import com.app.campusconnect.data.uistate.authentication.AuthFormState
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun NewPasswordScreen(
-    loginUiState: AuthUiState,
-    onNewPasswordValueChange: (String) -> Unit,
-    onConfirmNewPasswordValueChange: (String) -> Unit,
+    authFormState: AuthFormState,
+    onValueChange: (AuthFormState) -> Unit,
     onSendClick: () -> Unit,
     modifier: Modifier = Modifier,
-){
-    Column (
+) {
+    Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
         modifier = modifier
-    ){
+    ) {
         Text(
             text = stringResource(R.string.insert_new_password),
             style = MaterialTheme.typography.headlineSmall,
@@ -53,8 +52,10 @@ fun NewPasswordScreen(
         NewPasswordField(
             label = R.string.new_password,
             leadingIcon = Icons.Default.Lock,
-            value = loginUiState.newPassword,
-            onValueChange = onNewPasswordValueChange,
+            value = authFormState.newPassword,  // Acessando newPassword do authFormState
+            onValueChange = { newValue ->
+                onValueChange(authFormState.copy(newPassword = newValue))
+            },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Next
@@ -72,8 +73,10 @@ fun NewPasswordScreen(
         NewPasswordField(
             label = R.string.new_password,
             leadingIcon = Icons.Default.Lock,
-            value = loginUiState.confirmNewPassword,
-            onValueChange = onConfirmNewPasswordValueChange,
+            value = authFormState.confirmPassword,  // Acessando confirmPassword do authFormState
+            onValueChange = { newValue ->
+                onValueChange(authFormState.copy(confirmPassword = newValue))
+            },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
@@ -99,6 +102,7 @@ fun NewPasswordScreen(
         Spacer(modifier = Modifier.weight(5f))
     }
 }
+
 @Composable
 fun NewPasswordField(
     @StringRes label: Int,
@@ -122,11 +126,10 @@ fun NewPasswordField(
 @Preview(showBackground = true)
 @Composable
 fun NewPasswordLightThemePreview() {
-    CampusConnectTheme (darkTheme = false){
+    CampusConnectTheme(darkTheme = false) {
         NewPasswordScreen(
-            loginUiState = AuthUiState(),
-            onNewPasswordValueChange = {},
-            onConfirmNewPasswordValueChange = {},
+            authFormState = AuthFormState(),
+            onValueChange = {},
             onSendClick = {},
             modifier = Modifier
                 .fillMaxSize()
@@ -134,14 +137,14 @@ fun NewPasswordLightThemePreview() {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun NewPasswordDarkThemePreview() {
-    CampusConnectTheme (darkTheme = true){
+    CampusConnectTheme(darkTheme = true) {
         NewPasswordScreen(
-            loginUiState = AuthUiState(),
-            onNewPasswordValueChange = {},
-            onConfirmNewPasswordValueChange = {},
+            authFormState = AuthFormState(),
+            onValueChange = {},
             onSendClick = {},
             modifier = Modifier
                 .fillMaxSize()

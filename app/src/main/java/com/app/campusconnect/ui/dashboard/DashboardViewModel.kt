@@ -2,33 +2,31 @@ package com.app.campusconnect.ui.dashboard
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.app.campusconnect.CampusConnectApplication
 import com.app.campusconnect.data.repository.DashboardRepository
-import com.app.campusconnect.data.uistate.DashboardUiState
-import com.app.campusconnect.network.Event
+import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
+import com.app.campusconnect.data.uistate.dashboard.DashboardUiState
+import com.app.campusconnect.network.models.Event
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okio.IOException
+import java.io.IOException
+import javax.inject.Inject
 import retrofit2.HttpException
 
-
-class DashboardViewModel(
+@HiltViewModel
+class DashboardViewModel @Inject constructor(
     private val dashboardRepository: DashboardRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<DashboardUiState>(DashboardUiState.Loading)
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
 
-    private val _selectedEvent = MutableStateFlow<Event?>(null)
-    val selectedEvent: StateFlow<Event?> = _selectedEvent.asStateFlow()
+    private val _dashboardFormState = MutableStateFlow(DashboardFormState())
+    val dashboardFormState: StateFlow<DashboardFormState> = _dashboardFormState.asStateFlow()
 
     init {
         getEventsList()
@@ -36,47 +34,52 @@ class DashboardViewModel(
 
     private suspend fun fetchEvents(): DashboardUiState {
         return try {
-            DashboardUiState.Success(dashboardRepository.getEvents())
+            val events = dashboardRepository.getEvents()
+            _dashboardFormState.update { it.copy(eventList = events) }
+            DashboardUiState.Success(events)
         } catch (e: IOException) {
             Log.e("DashboardViewModel", "Network error fetching events", e)
-            DashboardUiState.Error("Network error")
+            DashboardUiState.Error("Erro de rede. Verifique sua conexão.")
         } catch (e: HttpException) {
             Log.e("DashboardViewModel", "HTTP error fetching events", e)
             when (e.code()) {
-                404 -> DashboardUiState.Error("Events not found")
-                else -> DashboardUiState.Error("Server error")
+                404 -> DashboardUiState.Error("Eventos não encontrados.")
+                else -> DashboardUiState.Error("Erro do servidor.")
             }
         } catch (e: Exception) {
             Log.e("DashboardViewModel", "Error fetching events", e)
-            DashboardUiState.Error("Unknown error")
+            DashboardUiState.Error("Erro desconhecido.")
         }
     }
-    internal fun getEventsList() {
+
+    fun getEventsList() {
         viewModelScope.launch {
             _uiState.value = DashboardUiState.Loading
             _uiState.value = fetchEvents()
         }
     }
+
     fun setSelectedEvent(event: Event) {
-        _selectedEvent.update { event }
+        _dashboardFormState.update { it.copy(selectedEvent = event) }
     }
 
-    fun setSelectedMyEvents(isSelected: Boolean) {
-        _uiState.update {
-            if (it is DashboardUiState.Success) {
-                it.copy(isSelectedMyEvents = isSelected)
-            } else {
-                it
-            }
+    fun updateSelectedMyEvents(isSelected: Boolean) {
+        _dashboardFormState.update { it.copy(isSelectedMyEvents = isSelected) }
+    }
+
+    fun updateDashboardFormState(updatedState: DashboardFormState) {
+        viewModelScope.launch {
+            _dashboardFormState.emit(updatedState)
         }
     }
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as CampusConnectApplication)
-                val dashboardRepository = application.container.dashboardRepository
-                DashboardViewModel(dashboardRepository = dashboardRepository)
+
+    fun performSearch(searchTerm: String) {
+        viewModelScope.launch {
+            val filteredEvents = dashboardFormState.value.eventList.filter { event ->
+                event.title.contains(searchTerm, ignoreCase = true) ||
+                        event.description.contains(searchTerm, ignoreCase = true)
             }
+            _dashboardFormState.update { it.copy(eventListFiltered = filteredEvents) }
         }
     }
 }

@@ -15,15 +15,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -31,59 +34,87 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
-import com.app.campusconnect.data.uistate.DashboardUiState
-import com.app.campusconnect.network.Event
-import com.app.campusconnect.network.User
+import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
+import com.app.campusconnect.data.uistate.dashboard.DashboardUiState
+import com.app.campusconnect.network.models.Event
+import com.app.campusconnect.network.models.User
 import com.app.campusconnect.ui.dashboard.components.ErrorScreen
+import com.app.campusconnect.ui.dashboard.components.EventCard
 import com.app.campusconnect.ui.dashboard.components.LoadingScreen
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun HomeScreen(
-    uiState: DashboardUiState,
+    dashboardUiState: DashboardUiState,
+    dashboardFormState: DashboardFormState,
     onEventClick: (Event) -> Unit,
+    onValueChange: (DashboardFormState) -> Unit,
+    onSearch: (String) -> Unit,
     retryAction: () -> Unit,
     modifier: Modifier = Modifier
-){
-    Column (modifier = modifier){
-        when (uiState) {
+) {
+    Column(modifier = modifier) {
+        when (dashboardUiState) {
             is DashboardUiState.Loading -> LoadingScreen(modifier = modifier)
             is DashboardUiState.Success -> ListEventsScreen(
-                eventList = uiState.eventList,
+                dashboardFormState = dashboardFormState,
+                eventList = dashboardFormState.eventList,
                 onEventClick = onEventClick,
+                onValueChange = { newValue ->
+                    onValueChange(dashboardFormState.copy(searchTerm = newValue))
+                },
+                onSearch = onSearch // Pass the onSearch lambda directly
             )
             is DashboardUiState.Error -> ErrorScreen(
+                error = dashboardUiState.message,
                 retryAction = retryAction,
                 modifier = modifier
             )
         }
     }
-
 }
 
 @Composable
 fun ListEventsScreen(
+    dashboardFormState: DashboardFormState,
     eventList: List<Event>,
+    onValueChange: (String) -> Unit,
+    onSearch: (String) -> Unit, // Receive the onSearch lambda
     onEventClick: (Event) -> Unit,
     modifier: Modifier = Modifier
-){
-    Column (
+) {
+    Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Bottom,
         modifier = modifier
-    ){
-
+    ) {
         Spacer(modifier = Modifier.weight(2f))
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = dashboardFormState.searchTerm,
+            onValueChange = onValueChange,
+            singleLine = true,
             shape = MaterialTheme.shapes.large,
             placeholder = {
                 Text(
                     text = stringResource(id = R.string.search)
+                )
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    onSearch(dashboardFormState.searchTerm)
+                }
+            ),
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "Search Icon"
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -96,7 +127,6 @@ fun ListEventsScreen(
                 .padding(dimensionResource(id = R.dimen.padding_small))
                 .width(200.dp)
                 .height(250.dp)
-
         )
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
         EventList(
@@ -111,7 +141,6 @@ fun ListEventsScreen(
     }
 }
 
-
 @Composable
 fun EventList(
     eventList: List<Event>,
@@ -125,55 +154,16 @@ fun EventList(
             fontWeight = FontWeight.Bold,
         )
         LazyRow {
-            items(eventList){ item: Event ->
-                    EventCard(
-                        event = item,
-                        onEventClick = onEventClick,
-                        modifier = modifier
-                    )
-
-            }
-        }
-    }
-
-}
-@Composable
-fun EventCard(
-    event: Event,
-    onEventClick: (Event) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        OutlinedButton(
-            onClick = { onEventClick(event) },
-            shape = MaterialTheme.shapes.medium,
-            contentPadding = PaddingValues(0.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Box (modifier = Modifier.fillMaxSize()){
-                Image(
-                    painter = painterResource(id = R.drawable.campus_connect_logo),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
-                Text(
-                    text = event.title,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.BottomCenter)
+            items(eventList) { item: Event ->
+                EventCard(
+                    event = item,
+                    onEventClick = onEventClick,
+                    modifier = modifier
                 )
             }
         }
     }
 }
-
-
 
 
 
@@ -181,7 +171,7 @@ fun EventCard(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenLightThemePreview() {
-    CampusConnectTheme (darkTheme = false) {
+    CampusConnectTheme(darkTheme = false) {
         val user = User(
             id = 1,
             name = "",
@@ -200,17 +190,21 @@ fun HomeScreenLightThemePreview() {
             )
         }
         ListEventsScreen(
+            dashboardFormState = DashboardFormState(eventList = mockData),
             eventList = mockData,
+            onValueChange = {},
+            onSearch = {},
             onEventClick = {},
             modifier = Modifier
                 .padding(16.dp)
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenDarkThemePreview() {
-    CampusConnectTheme (darkTheme = true) {
+    CampusConnectTheme(darkTheme = true) {
         val user = User(
             id = 1,
             name = "",
@@ -229,7 +223,10 @@ fun HomeScreenDarkThemePreview() {
             )
         }
         ListEventsScreen(
+            dashboardFormState = DashboardFormState(eventList = mockData),
             eventList = mockData,
+            onValueChange = {},
+            onSearch = {},
             onEventClick = {},
             modifier = Modifier
                 .padding(16.dp)
