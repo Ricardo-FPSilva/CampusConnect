@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
-import com.app.campusconnect.network.models.Event
+import com.app.campusconnect.network.dashboard.models.Event
 
 @Composable
 fun EventCard(

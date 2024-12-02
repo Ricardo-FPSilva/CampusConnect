@@ -5,10 +5,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.campusconnect.data.datastore.DataStoreManager
-import com.app.campusconnect.data.repository.AuthRepository
+import com.app.campusconnect.data.repository.authentication.AuthRepository
 import com.app.campusconnect.data.uistate.authentication.AuthFormState
 import com.app.campusconnect.data.uistate.authentication.AuthUiState
-import com.app.campusconnect.network.models.LoginRequest
+import com.app.campusconnect.network.authentication.models.LoginRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,7 +36,7 @@ class AuthViewModel @Inject constructor(
             val email = authFormState.value.email
             val password = authFormState.value.password
 
-            val loginResponse = authRepository.getLogin(LoginRequest(email = email,password = password))
+            val loginResponse = authRepository.login(LoginRequest(email = email,password = password))
             dataStoreManager.storeToken(loginResponse.token)
 
             Log.d("AuthViewModel", "Login bem-sucedido")

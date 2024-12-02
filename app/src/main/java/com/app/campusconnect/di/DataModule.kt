@@ -2,13 +2,13 @@ package com.app.campusconnect.di
 
 import android.content.Context
 import com.app.campusconnect.data.datastore.DataStoreManager
-import com.app.campusconnect.data.repository.AuthRepository
-import com.app.campusconnect.data.repository.DashboardRepository
-import com.app.campusconnect.data.repository.NetworkAuthRepository
-import com.app.campusconnect.data.repository.NetworkDashboardRepository
-import com.app.campusconnect.network.AuthApiService
-import com.app.campusconnect.network.AuthInterceptor
-import com.app.campusconnect.network.DashboardApiService
+import com.app.campusconnect.data.repository.authentication.AuthRepository
+import com.app.campusconnect.data.repository.dashboard.DashboardRepository
+import com.app.campusconnect.data.repository.authentication.NetworkAuthRepository
+import com.app.campusconnect.data.repository.dashboard.NetworkDashboardRepository
+import com.app.campusconnect.network.authentication.AuthApiService
+import com.app.campusconnect.network.authentication.AuthInterceptor
+import com.app.campusconnect.network.dashboard.DashboardApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,7 +32,8 @@ object DataModule {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("http://192.168.10.2:8080")
+            .baseUrl("http://192.168.10.6:8080")
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

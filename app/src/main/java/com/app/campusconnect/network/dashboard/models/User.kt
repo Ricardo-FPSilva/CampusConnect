@@ -1,4 +1,4 @@
-package com.app.campusconnect.network.models
+package com.app.campusconnect.network.dashboard.models
 
 import com.google.gson.annotations.SerializedName
 

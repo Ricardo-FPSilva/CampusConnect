@@ -2,7 +2,7 @@ package com.app.campusconnect.data.uistate.authentication
 
 data class AuthFormState(
     val registrationNumber: String = "",
-    val email: String = "arhur.de@gmail.com",
+    val email: String = "arhur.de@gmail.co",
     val emailCode: String = "",
     val name: String = "",
     val course: String = "",

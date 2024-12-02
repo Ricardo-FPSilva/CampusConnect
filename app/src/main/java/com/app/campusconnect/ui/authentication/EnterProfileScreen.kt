@@ -39,8 +39,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
 import com.app.campusconnect.data.uistate.authentication.AuthFormState
 import com.app.campusconnect.data.uistate.authentication.AuthUiState
-import com.app.campusconnect.ui.dashboard.components.ErrorScreen
-import com.app.campusconnect.ui.dashboard.components.LoadingScreen
+import com.app.campusconnect.ui.components.ErrorScreen
+import com.app.campusconnect.ui.components.LoadingScreen
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 

@@ -21,13 +21,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
-import com.app.campusconnect.network.models.Event
-import com.app.campusconnect.network.models.User
+import com.app.campusconnect.network.dashboard.models.Event
+import com.app.campusconnect.network.dashboard.models.User
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun EventDetailsScreen(
     event: Event,
+    onSubscribeClick: (Event) -> Unit,
     modifier: Modifier = Modifier,
 ){
 
@@ -68,7 +69,9 @@ fun EventDetailsScreen(
                 )
                 Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick =  {
+                        onSubscribeClick(event)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
@@ -125,6 +128,7 @@ fun EventDetailsScreenLightThemePreview() {
                 "24/04/2002",
                 user
             ),
+            onSubscribeClick = {},
             modifier = Modifier
                 .padding(16.dp)
         )
@@ -150,6 +154,7 @@ fun EventDetailsScreenDarkThemePreview() {
                 "24/04/2002",
                 user
             ),
+            onSubscribeClick = {},
             modifier = Modifier
                 .padding(16.dp)
         )

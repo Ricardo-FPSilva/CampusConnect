@@ -30,15 +30,16 @@ import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
 import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
 import com.app.campusconnect.data.uistate.dashboard.DashboardUiState
-import com.app.campusconnect.network.models.Event
-import com.app.campusconnect.network.models.User
-import com.app.campusconnect.ui.dashboard.components.ErrorScreen
-import com.app.campusconnect.ui.dashboard.components.LoadingScreen
+import com.app.campusconnect.network.dashboard.models.Enrollment
+import com.app.campusconnect.network.dashboard.models.Event
+import com.app.campusconnect.network.dashboard.models.User
+import com.app.campusconnect.ui.components.ErrorScreen
+import com.app.campusconnect.ui.components.LoadingScreen
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun MyEventsScreen(
-    uiState: DashboardUiState,
+    dashboardUiState: DashboardUiState,
     dashboardFormState: DashboardFormState, // Adicionado dashboardFormState
     onSelectionSub: (Boolean) -> Unit,
     onSelectionCreate: (Boolean) -> Unit,
@@ -51,16 +52,16 @@ fun MyEventsScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-        when (uiState) {
+        when (dashboardUiState) {
             is DashboardUiState.Loading -> LoadingScreen(modifier = modifier)
             is DashboardUiState.Success -> SubOrCreateScreen(
-                isSelected = dashboardFormState.isSelectedMyEvents, // Acessa isSelectedMyEvents do dashboardFormState
+                dashboardFormState = dashboardFormState,
                 onSelectionSub = onSelectionSub,
                 onSelectionCreate = onSelectionCreate,
                 onEventClick = onEventClick,
             )
             is DashboardUiState.Error -> ErrorScreen(
-                error = uiState.message,
+                error = dashboardUiState.message,
                 retryAction = retryAction,
                 modifier = modifier
             )
@@ -71,7 +72,7 @@ fun MyEventsScreen(
 
 @Composable
 fun SubOrCreateScreen (
-    isSelected: Boolean,
+    dashboardFormState: DashboardFormState,
     onSelectionSub: (Boolean) -> Unit,
     onSelectionCreate: (Boolean) -> Unit,
     onEventClick: (Event) -> Unit,
@@ -87,7 +88,7 @@ fun SubOrCreateScreen (
                 topEnd = 0.dp,
                 bottomStart = 50.dp,
                 bottomEnd = 0.dp,
-                isSelected = isSelected,
+                isSelected = dashboardFormState.isSelectedMyEvents,
                 onSelectionChange = onSelectionSub,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
@@ -99,41 +100,16 @@ fun SubOrCreateScreen (
                 topEnd = 50.dp,
                 bottomStart = 0.dp,
                 bottomEnd = 50.dp,
-                isSelected = !isSelected,
+                isSelected = !dashboardFormState.isSelectedMyEvents,
                 onSelectionChange = onSelectionCreate,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .weight(1f)
             )
         }
-        if (isSelected) {
+        if (dashboardFormState.isSelectedMyEvents) {
             SubscriptionsList(
-                subscriptionsList = listOf(
-                    Event(
-                        id = 1,
-                        title = "Event 1",
-                        description = "Description 1",
-                        location = "Location 1",
-                        eventDate = "15/12/1233",
-                        createdBy = User(0, "Ricarsd", "", "", ""),
-                    ),
-                    Event(
-                        id = 1,
-                        title = "Event 2",
-                        description = "Description 1",
-                        location = "Location 1",
-                        eventDate = "12/45/3212",
-                        createdBy = User(0, "Artgh", "", "", ""),
-                    ),
-                    Event(
-                        id = 1,
-                        title = "Event 3",
-                        description = "Description 1",
-                        location = "Location 1",
-                        eventDate = "32/12/1233",
-                        createdBy = User(0, "Samsd", "", "", ""),
-                    ),
-                ),
+                subscriptionsList = dashboardFormState.eventListEnrolled,
                 onEventClick = onEventClick
             )
         } else {
@@ -282,7 +258,7 @@ fun EventsCreatedList(
 
 @Composable
 fun SubscriptionsList(
-    subscriptionsList: List<Event>,
+    subscriptionsList: List<Enrollment>,
     onEventClick: (Event) -> Unit,
     modifier: Modifier = Modifier
 ){
@@ -293,9 +269,9 @@ fun SubscriptionsList(
     LazyColumn (
         modifier = modifier
     ){
-        items(subscriptionsList) { item: Event ->
+        items(subscriptionsList) { item: Enrollment ->
             MyEventCard(
-                event = item,
+                event = item.event,
                 onEventClick = onEventClick,
                 modifier = Modifier
             )
@@ -403,7 +379,7 @@ fun EventCardDarkThemePreview() {
 fun MyEventsLightThemePreview(){
     CampusConnectTheme(darkTheme = false) {
         SubOrCreateScreen(
-            isSelected = true,
+            dashboardFormState = DashboardFormState(),
             onSelectionSub = {},
             onSelectionCreate = {},
             onEventClick = {},
@@ -417,7 +393,7 @@ fun MyEventsLightThemePreview(){
 fun MyEventsDarkThemePreview() {
     CampusConnectTheme(darkTheme = true) {
         SubOrCreateScreen(
-            isSelected = true,
+            dashboardFormState = DashboardFormState(),
             onSelectionSub = {},
             onSelectionCreate = {},
             onEventClick = {},

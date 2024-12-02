@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui.dashboard.components
+package com.app.campusconnect.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

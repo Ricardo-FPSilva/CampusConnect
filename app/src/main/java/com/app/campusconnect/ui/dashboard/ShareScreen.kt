@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
 import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
-import com.app.campusconnect.network.models.Event
+import com.app.campusconnect.network.dashboard.models.Event
 import com.app.campusconnect.ui.dashboard.components.EventCard
 import com.app.campusconnect.ui.theme.CampusConnectTheme
 

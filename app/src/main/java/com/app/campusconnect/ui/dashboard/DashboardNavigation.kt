@@ -95,6 +95,9 @@ fun DashboardNavHost(
                 if (selectedEvent != null) {
                     EventDetailsScreen(
                         event = selectedEvent,
+                        onSubscribeClick = { event ->
+                            dashboardViewModel.eventRegistration(event.id)
+                        },
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(dimensionResource(id = R.dimen.padding_medium))
@@ -111,7 +114,7 @@ fun DashboardNavHost(
             }
             composable(route = DashboardScreen.MyEvents.name) {
                 MyEventsScreen(
-                    uiState = uiState,
+                    dashboardUiState = uiState,
                     dashboardFormState = dashboardFormState,
                     onSelectionSub = { isSelected ->
                         dashboardViewModel.updateSelectedMyEvents(isSelected)
@@ -123,7 +126,7 @@ fun DashboardNavHost(
                         dashboardViewModel.setSelectedEvent(event)
                         navController.navigate(DashboardScreen.EventDetails.name)
                     },
-                    retryAction = { dashboardViewModel.getEventsList() },
+                    retryAction = { dashboardViewModel.getEventsEnrolled() },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(dimensionResource(id = R.dimen.padding_medium))
