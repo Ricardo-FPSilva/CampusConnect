@@ -3,7 +3,6 @@ package com.app.campusconnect.data.repository
 import com.app.campusconnect.network.AuthApiService
 import com.app.campusconnect.network.models.LoginRequest
 import com.app.campusconnect.network.models.LoginResponse
-import com.app.campusconnect.network.models.User
 
 
 interface AuthRepository {
