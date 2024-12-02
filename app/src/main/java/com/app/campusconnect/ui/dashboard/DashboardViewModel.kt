@@ -3,7 +3,6 @@ package com.app.campusconnect.ui.dashboard
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.campusconnect.data.datastore.DataStoreManager
 import com.app.campusconnect.data.repository.dashboard.DashboardRepository
 import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
 import com.app.campusconnect.data.uistate.dashboard.DashboardUiState
@@ -12,12 +11,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
-import retrofit2.HttpException
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
