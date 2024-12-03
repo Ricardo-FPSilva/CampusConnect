@@ -15,4 +15,8 @@ interface DashboardApiService {
 
     @POST("api/events/{id}/enroll")
     suspend fun eventRegistration(@Path("id") id: Int)
+
+    @POST("api/events/{id}/unroll")
+    suspend fun eventUnregistration(@Path("id") id: Int)
+
 }

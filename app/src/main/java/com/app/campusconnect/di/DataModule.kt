@@ -19,21 +19,26 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
+    private const val BASE_URL = "http://192.168.61.225:8080"
+
     @Provides
     @Singleton
-    fun provideRetrofit(authInterceptor: AuthInterceptor): Retrofit {
-        val client = OkHttpClient.Builder()
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
             .build()
+    }
 
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.10.6:8080")
-            .client(client)
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -67,6 +72,4 @@ object DataModule {
     fun provideDataStoreManager(@ApplicationContext context: Context): DataStoreManager {
         return DataStoreManager(context)
     }
-
-
 }

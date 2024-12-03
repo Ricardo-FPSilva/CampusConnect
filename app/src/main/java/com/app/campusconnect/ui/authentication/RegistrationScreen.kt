@@ -59,7 +59,6 @@ fun RegistrationScreen(
                 onValueChange(authFormState.copy(registrationNumber = newValue))
             },
             keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
             modifier = Modifier

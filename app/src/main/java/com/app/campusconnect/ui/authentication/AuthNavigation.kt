@@ -1,6 +1,5 @@
 package com.app.campusconnect.ui.authentication
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,14 +18,8 @@ import androidx.navigation.compose.rememberNavController
 import com.app.campusconnect.R
 import com.app.campusconnect.data.uistate.authentication.AuthUiState
 import com.app.campusconnect.ui.authentication.components.AuthAppBar
+import com.app.campusconnect.ui.authentication.models.AuthScreen
 
-enum class AuthScreen (@StringRes val title: Int){
-    Welcome(title = R.string.app_name),
-    Registration(title = R.string.registration),
-    EmailCode(title = R.string.verification_code),
-    NewPassword(title = R.string.new_password),
-    EnterProfile(title = R.string.access),
-}
 
 @Composable
 fun AuthNavHost(
@@ -66,7 +59,7 @@ fun AuthNavHost(
             composable(route = AuthScreen.Registration.name) {
                 RegistrationScreen(
                     authFormState = authFormState,
-                    onSendButtonClick = { navController.navigate(AuthScreen.EmailCode.name) },
+                    onSendButtonClick = { navController.navigate(AuthScreen.EnterProfile.name) },
                     onValueChange = { updatedState ->
                         viewModel.updateAuthFormState(updatedState)
                     },

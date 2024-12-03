@@ -1,6 +1,5 @@
 package com.app.campusconnect.ui.authentication
 
-import android.accounts.NetworkErrorException
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.util.concurrent.TimeoutException
+import java.io.IOException
 import javax.inject.Inject
 
 
@@ -31,43 +30,6 @@ class AuthViewModel @Inject constructor(
     private val _authFormState = MutableStateFlow(AuthFormState())
     val authFormState = _authFormState.asStateFlow()
 
-    private suspend fun fetchUser(): AuthUiState {
-        return try {
-            val email = authFormState.value.email
-            val password = authFormState.value.password
-
-            val loginResponse = authRepository.login(LoginRequest(email = email,password = password))
-            dataStoreManager.storeToken(loginResponse.token)
-
-            Log.d("AuthViewModel", "Login bem-sucedido")
-
-            updateLoginStatus(true)
-            AuthUiState.Success()
-        } catch (e: HttpException) {
-
-            if (e.code() == 401) { // Unauthorized
-                Log.e("AuthViewModel", "Erro de autenticação", e)
-                updateLoginStatus(false)
-                AuthUiState.Error("Usuário ou senha inválidos")
-            } else {
-                Log.e("AuthViewModel", "Erro na requisição", e)
-                updateLoginStatus(false)
-                AuthUiState.Error("Erro ao fazer login: ${e.message}")
-            }
-        } catch (e: NetworkErrorException) {
-            Log.e("AuthViewModel", "Sem conexão com a internet", e)
-            updateLoginStatus(false)
-            AuthUiState.Error("Sem conexão com a internet")
-        } catch (e: TimeoutException) {
-            Log.e("AuthViewModel", "Tempo limite excedido", e)
-            updateLoginStatus(false)
-            AuthUiState.Error("Tempo limite excedido")
-        } catch (e: Exception) {
-            Log.e("AuthViewModel", "Erro ao fazer login", e)
-            updateLoginStatus(false)
-            AuthUiState.Error("Erro ao fazer login: ${e.message}")
-        }
-    }
 
     fun authenticateUser() {
         viewModelScope.launch {
@@ -92,6 +54,35 @@ class AuthViewModel @Inject constructor(
     fun updateUiState(newState: AuthUiState) {
         viewModelScope.launch {
             _uiState.emit(newState)
+        }
+    }
+
+    private suspend fun fetchUser(): AuthUiState {
+        return runCatching {
+            val registrationNumber = authFormState.value.email
+            val password = authFormState.value.password
+
+            val loginResponse = authRepository.login(LoginRequest(email = registrationNumber, password = password))
+            dataStoreManager.storeToken(loginResponse.token)
+
+            Log.d("AuthViewModel", "Login bem-sucedido")
+
+            updateLoginStatus(true)
+            AuthUiState.Success()
+        }.getOrElse { e ->
+            Log.e("AuthViewModel", "Erro ao fazer login", e)
+            updateLoginStatus(false)
+            when (e) {
+                is HttpException -> {
+                    if (e.code() == 401) { // Unauthorized
+                        AuthUiState.Error("Usuário ou senha inválidos")
+                    } else {
+                        AuthUiState.Error("Erro na requisição: ${e.code()}")
+                    }
+                }
+                is IOException -> AuthUiState.Error("Sem conexão com a internet")
+                else -> AuthUiState.Error("Erro ao fazer login: ${e.message}")
+            }
         }
     }
 }

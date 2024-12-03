@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.app.campusconnect.data.repository.dashboard.DashboardRepository
 import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
 import com.app.campusconnect.data.uistate.dashboard.DashboardUiState
+import com.app.campusconnect.data.uistate.models.ErrorType
 import com.app.campusconnect.network.dashboard.models.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,8 +30,8 @@ class DashboardViewModel @Inject constructor(
     val dashboardFormState: StateFlow<DashboardFormState> = _dashboardFormState.asStateFlow()
 
     init {
-        getEventsList()
         getEventsEnrolled()
+        getEventsList()
     }
     fun getEventsList() {
         viewModelScope.launch {
@@ -51,6 +52,14 @@ class DashboardViewModel @Inject constructor(
             _uiState.value = submitEventRegistration(id)
         }
     }
+
+    fun eventUnregistration(id: Int) {
+        viewModelScope.launch {
+            _uiState.value = DashboardUiState.Loading
+            _uiState.value = submitEventUnregistration(id)
+        }
+    }
+
     fun setSelectedEvent(event: Event) {
         _dashboardFormState.update { it.copy(selectedEvent = event) }
     }
@@ -74,51 +83,66 @@ class DashboardViewModel @Inject constructor(
         }
     }
     private suspend fun fetchEvents(): DashboardUiState {
-        return try {
+        return runCatching {
             val events = dashboardRepository.getEvents()
             _dashboardFormState.update { it.copy(eventList = events) }
             DashboardUiState.Success()
-        } catch (e: IOException) {
-            Log.e("DashboardViewModel", "Network error fetching events", e)
-            DashboardUiState.Error("Erro de rede. Verifique sua conexão.")
-        } catch (e: HttpException) {
-            Log.e("DashboardViewModel", "HTTP error fetching events", e)
-            when (e.code()) {
-                404 -> DashboardUiState.Error("Eventos não encontrados.")
-                else -> DashboardUiState.Error("Erro do servidor.")
-            }
-        } catch (e: Exception) {
+        }.getOrElse { e ->
             Log.e("DashboardViewModel", "Error fetching events", e)
-            DashboardUiState.Error("Erro desconhecido.")
+            when (e) {
+                is IOException -> DashboardUiState.Error(ErrorType.NETWORK, "Erro de rede. Verifique sua conexão.")
+                is HttpException -> {
+                    when (e.code()) {
+                        404 -> DashboardUiState.Error(ErrorType.SERVER, "Eventos não encontrados.")
+                        else -> DashboardUiState.Error(ErrorType.SERVER, "Erro do servidor (${e.code()}).")
+                    }
+                }
+                else -> DashboardUiState.Error(ErrorType.UNKNOWN, "Erro desconhecido.")
+            }
+
         }
     }
+
     private suspend fun fetchEventsEnrolled(): DashboardUiState {
-        return try {
-
+        return runCatching {
             val events = dashboardRepository.getEventsEnrolled()
-
             _dashboardFormState.update { it.copy(eventListEnrolled = events) }
             DashboardUiState.Success()
-
-        } catch (e: IOException) {
-            Log.e("DashboardViewModel", "Network error fetching events", e)
-
-            DashboardUiState.Error("Erro de rede. Verifique sua conexão.")
-        } catch (e: Exception){
-            Log.e("DashboardViewModel", "Error fetching events", e)
-
-            DashboardUiState.Error("Erro desconhecido.")
+        }.getOrElse { e ->
+            Log.e("DashboardViewModel", "Error fetching enrolled events", e)
+            when (e) {
+                is IOException -> DashboardUiState.Error(ErrorType.NETWORK, "Erro de rede. Verifique sua conexão.")
+                else -> DashboardUiState.Error(ErrorType.UNKNOWN, "Erro ao buscar eventos inscritos.")
+            }
         }
-
     }
+
     private suspend fun submitEventRegistration(id: Int): DashboardUiState {
-        return try {
+        return runCatching {
             dashboardRepository.eventRegistration(id = id)
-            getEventsEnrolled()
+            getEventsEnrolled() // Atualiza a lista de eventos inscritos após o registro
             DashboardUiState.Success()
-        } catch (e: IOException) {
-            Log.e("DashboardViewModel", "Network error submitting event registration", e)
-            DashboardUiState.Error("Erro de rede. Verifique sua conexão.")
+        }.getOrElse { e ->
+            Log.e("DashboardViewModel", "Error registering for event", e)
+            when (e) {
+                is IOException -> DashboardUiState.Error(ErrorType.NETWORK, "Erro de rede. Verifique sua conexão.")
+                else -> DashboardUiState.Error(ErrorType.UNKNOWN, "Erro ao se registrar no evento.")
+            }
         }
     }
+
+    private suspend fun submitEventUnregistration(id: Int): DashboardUiState {
+        return runCatching {
+            dashboardRepository.eventUnregistration(id = id)
+            getEventsEnrolled() // Atualiza a lista de eventos inscritos após o registro
+            DashboardUiState.Success()
+        }.getOrElse { e ->
+            Log.e("DashboardViewModel", "Error registering for event", e)
+            when (e) {
+                is IOException -> DashboardUiState.Error(ErrorType.NETWORK, "Erro de rede. Verifique sua conexão.")
+                else -> DashboardUiState.Error(ErrorType.UNKNOWN, "Erro ao se registrar no evento.")
+            }
+        }
+    }
+
 }

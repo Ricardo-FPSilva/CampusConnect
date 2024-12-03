@@ -9,15 +9,12 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class DataStoreManager (
-    private val context: Context,
-) {
-    companion object {
-        private val Context.dataStore: DataStore<Preferences>
-        by preferencesDataStore(name = "user_preferences")
+private const val USER_PREFERENCES = "user_preferences"
+private val TOKEN_KEY = stringPreferencesKey("token")
 
-        val TOKEN_KEY = stringPreferencesKey("token")
-    }
+class DataStoreManager(private val context: Context) {
+
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = USER_PREFERENCES)
 
     suspend fun storeToken(token: String) {
         context.dataStore.edit { preferences ->

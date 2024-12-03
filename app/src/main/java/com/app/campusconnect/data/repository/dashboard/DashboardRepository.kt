@@ -7,5 +7,6 @@ interface DashboardRepository {
     suspend fun getEvents(): List<Event>
     suspend fun getEventsEnrolled(): List<Enrollment>
     suspend fun eventRegistration(id: Int)
+    suspend fun eventUnregistration(id: Int)
 }
 

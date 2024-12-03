@@ -1,6 +1,5 @@
 package com.app.campusconnect.ui.dashboard
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -20,14 +19,8 @@ import com.app.campusconnect.R
 import com.app.campusconnect.ui.dashboard.components.DashboardBottomAppBar
 import com.app.campusconnect.ui.dashboard.components.DashboardTopAppBar
 import com.app.campusconnect.ui.dashboard.components.EventCreationFab
+import com.app.campusconnect.ui.dashboard.models.DashboardScreen
 
-enum class DashboardScreen (@StringRes val title: Int){
-    Home(title = R.string.home),
-    EventDetails(title = R.string.event_details),
-    EventCreation(title = R.string.event_creation),
-    MyEvents(title = R.string.my_events),
-    Search(title = R.string.search)
-}
 
 @Composable
 fun DashboardNavHost(
