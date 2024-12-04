@@ -99,7 +99,8 @@ fun EventGrid(
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(dimensionResource(id = R.dimen.padding_small)) // Adiciona padding interno
+        contentPadding = PaddingValues(dimensionResource(id = R.dimen.padding_small)), // Adiciona padding interno
+        modifier = modifier
     ) {
         items(events) { event ->
             EventCard(

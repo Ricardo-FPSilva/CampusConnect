@@ -19,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -172,14 +171,13 @@ fun EventDateInput(
 ) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
-    val year = calendar.get(Calendar.YEAR)
-    val month = calendar.get(Calendar.MONTH)
-    val day = calendar.get(Calendar.DAY_OF_MONTH)
+    val initialYear = calendar.get(Calendar.YEAR)
+    val initialMonth = calendar.get(Calendar.MONTH)
+    val initialDay = calendar.get(Calendar.DAY_OF_MONTH)
 
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     var selectedDate by remember { mutableStateOf(dateFormatter.format(calendar.time)) }
     var showDialog by remember { mutableStateOf(false) }
-
 
     Row {
         OutlinedTextField(
@@ -202,29 +200,21 @@ fun EventDateInput(
     }
 
     if (showDialog) {
-        val datePickerDialog = DatePickerDialog(
+        DatePickerDialog(
             context,
-            { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-                calendar.set(year, month, dayOfMonth)
-
+            { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+                calendar.set(selectedYear, selectedMonth, selectedDay)
                 selectedDate = dateFormatter.format(calendar.time)
                 onDateSelected(selectedDate)
-                showDialog = false
             },
-            year,
-            month,
-            day
-        )
-
-        // Define o OnCancelListener
-        datePickerDialog.setOnCancelListener {
-            showDialog = false
+            initialYear,
+            initialMonth,
+            initialDay
+        ).apply {
+            setOnCancelListener { showDialog = false }
+            show()
         }
-
-        datePickerDialog.show()
     }
-
-
 }
 
 @Composable
