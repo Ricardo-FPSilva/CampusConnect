@@ -2,8 +2,8 @@ package com.app.campusconnect.di
 
 import android.content.Context
 import com.app.campusconnect.data.datastore.DataStoreManager
-import com.app.campusconnect.data.repository.authentication.AuthRepository
-import com.app.campusconnect.data.repository.dashboard.DashboardRepository
+import com.app.campusconnect.domain.authentication.AuthRepository
+import com.app.campusconnect.domain.dashboard.DashboardRepository
 import com.app.campusconnect.data.repository.authentication.NetworkAuthRepository
 import com.app.campusconnect.data.repository.dashboard.NetworkDashboardRepository
 import com.app.campusconnect.network.authentication.AuthApiService
@@ -23,7 +23,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
-    private const val BASE_URL = "http://192.168.61.225:8080"
+    private const val BASE_URL = "http://192.168.10.3:8080"
 
     @Provides
     @Singleton

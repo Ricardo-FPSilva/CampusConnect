@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui.theme
+package com.app.campusconnect.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes

@@ -39,5 +39,6 @@
     <string name="event_details">Event Details</string>
     <string name="event_creation">Event Creation</string>
     <string name="my_events">My Events</string>
+    <string name="nenhum_evento_encontrado">Nenhum evento encontrado.</string>
 
 </resources>

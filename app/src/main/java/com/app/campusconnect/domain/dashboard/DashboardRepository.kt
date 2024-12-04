@@ -1,7 +1,7 @@
-package com.app.campusconnect.data.repository.dashboard
+package com.app.campusconnect.domain.dashboard
 
-import com.app.campusconnect.network.dashboard.models.Enrollment
-import com.app.campusconnect.network.dashboard.models.Event
+import com.app.campusconnect.models.dashboard.Enrollment
+import com.app.campusconnect.models.dashboard.Event
 
 interface DashboardRepository {
     suspend fun getEvents(): List<Event>

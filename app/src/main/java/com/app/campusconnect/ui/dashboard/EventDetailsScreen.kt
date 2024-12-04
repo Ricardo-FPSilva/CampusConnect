@@ -21,9 +21,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
-import com.app.campusconnect.network.dashboard.models.Event
-import com.app.campusconnect.network.dashboard.models.User
-import com.app.campusconnect.ui.theme.CampusConnectTheme
+import com.app.campusconnect.models.dashboard.Event
+import com.app.campusconnect.models.dashboard.User
+import com.app.campusconnect.theme.CampusConnectTheme
 
 @Composable
 fun EventDetailsScreen(

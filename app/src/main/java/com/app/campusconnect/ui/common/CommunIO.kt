@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui.components
+package com.app.campusconnect.ui.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

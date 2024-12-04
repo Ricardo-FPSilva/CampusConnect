@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui.dashboard.models
+package com.app.campusconnect.models.dashboard
 
 import androidx.annotation.StringRes
 import com.app.campusconnect.R

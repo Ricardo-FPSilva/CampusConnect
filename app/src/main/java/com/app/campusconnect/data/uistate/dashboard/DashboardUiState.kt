@@ -1,6 +1,6 @@
 package com.app.campusconnect.data.uistate.dashboard
 
-import com.app.campusconnect.data.uistate.models.ErrorType
+import com.app.campusconnect.models.common.ErrorType
 
 sealed interface DashboardUiState {
     data object Loading : DashboardUiState

@@ -27,9 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
 import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
-import com.app.campusconnect.network.dashboard.models.Event
+import com.app.campusconnect.models.dashboard.Event
 import com.app.campusconnect.ui.dashboard.components.EventCard
-import com.app.campusconnect.ui.theme.CampusConnectTheme
+import com.app.campusconnect.theme.CampusConnectTheme
 
 @Composable
 fun SearchScreen(
@@ -45,16 +45,27 @@ fun SearchScreen(
     ) {
         SearchTextField(
             value = dashboardFormState.searchTerm,
-            onValueChange = onValueChange,
+            onValueChange = { newValue ->
+                onValueChange(newValue) // Chama onValueChange com o novo valor
+            },
             onSearch = { onSearch(dashboardFormState.searchTerm) }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        EventGrid(
-            events = dashboardFormState.eventListFiltered,
-            onEventClick = onEventClick
-        )
+        // Verifica se a lista filtrada está vazia
+        if (dashboardFormState.eventsListFiltered.isEmpty()) {
+            Text(
+                text = stringResource(R.string.nenhum_evento_encontrado), // Mensagem informativa
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        } else {
+            EventGrid(
+                events = dashboardFormState.eventsListFiltered,
+                onEventClick = onEventClick
+            )
+        }
     }
 }
 

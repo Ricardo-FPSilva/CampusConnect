@@ -7,7 +7,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
-private const val API_BASE_URL = "http://192.168.61.225:8080/api"
+private const val API_BASE_URL = "http://192.168.10.3:8080/api"
 
 class AuthInterceptor @Inject constructor(
     private val dataStoreManager: DataStoreManager

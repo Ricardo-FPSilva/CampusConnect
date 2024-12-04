@@ -1,4 +1,4 @@
-package com.app.campusconnect.network.authentication.models
+package com.app.campusconnect.models.authentication
 
 import com.google.gson.annotations.SerializedName
 

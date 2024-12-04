@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui.theme
+package com.app.campusconnect.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -239,18 +239,6 @@ private val highContrastDarkColorScheme = darkColorScheme(
     surfaceContainer = surfaceContainerDarkHighContrast,
     surfaceContainerHigh = surfaceContainerHighDarkHighContrast,
     surfaceContainerHighest = surfaceContainerHighestDarkHighContrast,
-)
-
-@Immutable
-data class ColorFamily(
-    val color: Color,
-    val onColor: Color,
-    val colorContainer: Color,
-    val onColorContainer: Color
-)
-
-val unspecified_scheme = ColorFamily(
-    Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
 )
 
 @Composable

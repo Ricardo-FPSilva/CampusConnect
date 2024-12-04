@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
-import com.app.campusconnect.ui.theme.CampusConnectTheme
+import com.app.campusconnect.theme.CampusConnectTheme
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

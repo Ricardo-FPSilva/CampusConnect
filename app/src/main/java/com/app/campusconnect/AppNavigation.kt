@@ -4,18 +4,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.app.campusconnect.ui.authentication.AuthNavHost
+import com.app.campusconnect.ui.navigation.authentication.AuthNavigation
 import com.app.campusconnect.ui.authentication.AuthViewModel
-import com.app.campusconnect.ui.dashboard.DashboardNavHost
+import com.app.campusconnect.ui.navigation.dashboard.DashboardNavHost
 
 @Composable
 fun AppNavigation() {
-    val loginViewModel: AuthViewModel = viewModel()
-    val authFormState by loginViewModel.authFormState.collectAsState()
+    val authViewModel: AuthViewModel = viewModel()
+    val authState by authViewModel.authState.collectAsState()
 
-    if (authFormState.isUserLoggedIn) {
+    if (authState.formState.isUserLoggedIn) {
         DashboardNavHost()
     } else {
-        AuthNavHost()
+        AuthNavigation()
     }
 }

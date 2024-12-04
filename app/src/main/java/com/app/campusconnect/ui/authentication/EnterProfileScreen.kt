@@ -38,31 +38,31 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
 import com.app.campusconnect.data.uistate.authentication.AuthFormState
-import com.app.campusconnect.data.uistate.authentication.AuthUiState
-import com.app.campusconnect.ui.components.ErrorScreen
-import com.app.campusconnect.ui.components.LoadingScreen
-import com.app.campusconnect.ui.theme.CampusConnectTheme
+import com.app.campusconnect.data.uistate.common.UiState
+import com.app.campusconnect.theme.CampusConnectTheme
+import com.app.campusconnect.ui.common.ErrorScreen
+import com.app.campusconnect.ui.common.LoadingScreen
 
 
 @Composable
 fun EnterProfileScreen(
-    authUiState: AuthUiState,
+    uiState: UiState,
     authFormState: AuthFormState,
     onAccessClick: () -> Unit,
     onValueChange: (AuthFormState) -> Unit,
     retryAction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when (authUiState) {
-        is AuthUiState.Loading -> LoadingScreen(modifier = modifier)
-        is AuthUiState.Success -> LoginFormScreen(
+    when (uiState) {
+        is UiState.Loading -> LoadingScreen(modifier = modifier)
+        is UiState.Success -> LoginFormScreen(
             authFormState = authFormState,
             onAccessClick = onAccessClick,
             onValueChange = onValueChange,
             modifier = modifier
         )
-        is AuthUiState.Error -> ErrorScreen(
-            error = authUiState.message,
+        is UiState.Error -> ErrorScreen(
+            error = uiState.message,
             retryAction = retryAction,
             modifier = modifier
         )
@@ -205,7 +205,7 @@ fun EnterPasswordField(
 fun EnterProfileLightThemePreview() {
     CampusConnectTheme(darkTheme = false) {
         EnterProfileScreen(
-            authUiState = AuthUiState.Success(), // Passando AuthUiState.Success()
+            uiState = UiState.Success, // Passando AuthUiState.Success()
             authFormState = AuthFormState(),
             onAccessClick = {},
             onValueChange = {},
@@ -222,7 +222,7 @@ fun EnterProfileLightThemePreview() {
 fun EnterProfileDarkThemePreview() {
     CampusConnectTheme(darkTheme = true) {
         EnterProfileScreen(
-            authUiState = AuthUiState.Success(), // Passando AuthUiState.Success()
+            uiState = UiState.Success, // Passando AuthUiState.Success()
             authFormState = AuthFormState(),
             onAccessClick = {},
             onValueChange = {},

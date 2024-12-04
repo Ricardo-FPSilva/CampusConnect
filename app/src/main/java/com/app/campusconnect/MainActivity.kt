@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.app.campusconnect.ui.theme.CampusConnectTheme
+import com.app.campusconnect.theme.CampusConnectTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -28,18 +28,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
+import com.app.campusconnect.data.uistate.common.UiState
 import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
-import com.app.campusconnect.data.uistate.dashboard.DashboardUiState
-import com.app.campusconnect.network.dashboard.models.Enrollment
-import com.app.campusconnect.network.dashboard.models.Event
-import com.app.campusconnect.network.dashboard.models.User
-import com.app.campusconnect.ui.components.ErrorScreen
-import com.app.campusconnect.ui.components.LoadingScreen
-import com.app.campusconnect.ui.theme.CampusConnectTheme
+import com.app.campusconnect.models.dashboard.Enrollment
+import com.app.campusconnect.models.dashboard.Event
+import com.app.campusconnect.models.dashboard.User
+import com.app.campusconnect.theme.CampusConnectTheme
+import com.app.campusconnect.ui.common.ErrorScreen
+import com.app.campusconnect.ui.common.LoadingScreen
 
 @Composable
 fun MyEventsScreen(
-    dashboardUiState: DashboardUiState,
+    uiState: UiState,
     dashboardFormState: DashboardFormState, // Adicionado dashboardFormState
     onSelectionSub: (Boolean) -> Unit,
     onSelectionCreate: (Boolean) -> Unit,
@@ -52,16 +52,16 @@ fun MyEventsScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-        when (dashboardUiState) {
-            is DashboardUiState.Loading -> LoadingScreen(modifier = modifier)
-            is DashboardUiState.Success -> SubOrCreateScreen(
+        when (uiState) {
+            is UiState.Loading -> LoadingScreen(modifier = modifier)
+            is UiState.Success -> SubOrCreateScreen(
                 dashboardFormState = dashboardFormState,
                 onSelectionSub = onSelectionSub,
                 onSelectionCreate = onSelectionCreate,
                 onEventClick = onEventClick,
             )
-            is DashboardUiState.Error -> ErrorScreen(
-                error = dashboardUiState.message,
+            is UiState.Error -> ErrorScreen(
+                error = uiState.message,
                 retryAction = retryAction,
                 modifier = modifier
             )
@@ -109,7 +109,7 @@ fun SubOrCreateScreen (
         }
         if (dashboardFormState.isSelectedMyEvents) {
             SubscriptionsList(
-                subscriptionsList = dashboardFormState.eventListEnrolled,
+                subscriptionsList = dashboardFormState.eventsListEnrolled,
                 onEventClick = onEventClick
             )
         } else {

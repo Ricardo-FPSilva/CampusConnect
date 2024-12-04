@@ -16,7 +16,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.app.campusconnect.R
-import com.app.campusconnect.ui.authentication.models.AuthScreen
+import com.app.campusconnect.models.authentication.AuthScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

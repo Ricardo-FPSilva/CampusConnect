@@ -1,8 +1,9 @@
 package com.app.campusconnect.data.repository.dashboard
 
+import com.app.campusconnect.domain.dashboard.DashboardRepository
 import com.app.campusconnect.network.dashboard.DashboardApiService
-import com.app.campusconnect.network.dashboard.models.Enrollment
-import com.app.campusconnect.network.dashboard.models.Event
+import com.app.campusconnect.models.dashboard.Enrollment
+import com.app.campusconnect.models.dashboard.Event
 
 class NetworkDashboardRepository(
     private val dashboardApiService: DashboardApiService

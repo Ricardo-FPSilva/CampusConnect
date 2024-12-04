@@ -1,9 +1,8 @@
-package com.app.campusconnect.ui.dashboard
+package com.app.campusconnect.ui.navigation.dashboard
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,20 +18,27 @@ import com.app.campusconnect.R
 import com.app.campusconnect.ui.dashboard.components.DashboardBottomAppBar
 import com.app.campusconnect.ui.dashboard.components.DashboardTopAppBar
 import com.app.campusconnect.ui.dashboard.components.EventCreationFab
-import com.app.campusconnect.ui.dashboard.models.DashboardScreen
+import com.app.campusconnect.ui.dashboard.components.EventNotFound
+import com.app.campusconnect.models.dashboard.DashboardScreen
+import com.app.campusconnect.ui.dashboard.DashboardViewModel
+import com.app.campusconnect.ui.dashboard.EventCreationScreen
+import com.app.campusconnect.ui.dashboard.EventDetailsScreen
+import com.app.campusconnect.ui.dashboard.HomeScreen
+import com.app.campusconnect.ui.dashboard.MyEventsScreen
+import com.app.campusconnect.ui.dashboard.SearchScreen
 
 
 @Composable
 fun DashboardNavHost(
-    navController: NavHostController = rememberNavController(),
+    dashboardViewModel: DashboardViewModel = viewModel(),
+    navController: NavHostController = rememberNavController()
 ) {
-    val dashboardViewModel: DashboardViewModel = viewModel()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = DashboardScreen.valueOf(
-        backStackEntry?.destination?.route ?: DashboardScreen.Home.name
-    )
-    val dashboardFormState by dashboardViewModel.dashboardFormState.collectAsState()
-    val uiState by dashboardViewModel.uiState.collectAsState()
+    val currentScreen = backStackEntry?.destination?.route?.let {
+        DashboardScreen.valueOf(it)
+    } ?: DashboardScreen.Home
+
+    val dashboardState by dashboardViewModel.dashboardState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -43,7 +49,13 @@ fun DashboardNavHost(
                 currentScreen = currentScreen,
                 onTabSelected = { newScreen ->
                     navController.popBackStack(DashboardScreen.Home.name, inclusive = false)
-                    navController.navigate(newScreen.name)
+                    navController.navigate(newScreen.name) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
             )
         },
@@ -64,8 +76,8 @@ fun DashboardNavHost(
         ) {
             composable(route = DashboardScreen.Home.name) {
                 HomeScreen(
-                    dashboardUiState = uiState,
-                    dashboardFormState = dashboardFormState,
+                    uiState = dashboardState.uiState,
+                    dashboardFormState = dashboardState.formState,
                     onEventClick = { event ->
                         dashboardViewModel.setSelectedEvent(event)
                         navController.navigate(DashboardScreen.EventDetails.name)
@@ -84,7 +96,7 @@ fun DashboardNavHost(
                 )
             }
             composable(route = DashboardScreen.EventDetails.name) {
-                val selectedEvent = dashboardFormState.selectedEvent
+                val selectedEvent = dashboardState.formState.selectedEvent
                 if (selectedEvent != null) {
                     EventDetailsScreen(
                         event = selectedEvent,
@@ -96,7 +108,7 @@ fun DashboardNavHost(
                             .padding(dimensionResource(id = R.dimen.padding_medium))
                     )
                 } else {
-                    Text("Evento não encontrado.")
+                    EventNotFound()
                 }
             }
             composable(route = DashboardScreen.EventCreation.name) {
@@ -107,8 +119,8 @@ fun DashboardNavHost(
             }
             composable(route = DashboardScreen.MyEvents.name) {
                 MyEventsScreen(
-                    dashboardUiState = uiState,
-                    dashboardFormState = dashboardFormState,
+                    uiState = dashboardState.uiState,
+                    dashboardFormState = dashboardState.formState,
                     onSelectionSub = { isSelected ->
                         dashboardViewModel.updateSelectedMyEvents(isSelected)
                     },
@@ -128,14 +140,14 @@ fun DashboardNavHost(
             // Add composable for the Search screen
             composable(route = DashboardScreen.Search.name) {
                 SearchScreen(
-                    dashboardFormState = dashboardFormState,
+                    dashboardFormState = dashboardState.formState,
                     onEventClick = { event ->
                         dashboardViewModel.setSelectedEvent(event)
                         navController.navigate(DashboardScreen.EventDetails.name)
                     },
                     onValueChange = { updatedState ->
                         dashboardViewModel.updateDashboardFormState(
-                            dashboardFormState.copy(searchTerm = updatedState)
+                            dashboardState.formState.copy(searchTerm = updatedState)
                         )
                     },
                     onSearch = { searchTerm ->

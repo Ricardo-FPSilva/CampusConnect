@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui.authentication
+package com.app.campusconnect.ui.navigation.authentication
 
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,23 +16,27 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.app.campusconnect.R
-import com.app.campusconnect.data.uistate.authentication.AuthUiState
+import com.app.campusconnect.data.uistate.common.UiState
 import com.app.campusconnect.ui.authentication.components.AuthAppBar
-import com.app.campusconnect.ui.authentication.models.AuthScreen
-
+import com.app.campusconnect.models.authentication.AuthScreen
+import com.app.campusconnect.ui.authentication.AuthViewModel
+import com.app.campusconnect.ui.authentication.EmailCodeScreen
+import com.app.campusconnect.ui.authentication.EnterProfileScreen
+import com.app.campusconnect.ui.authentication.NewPasswordScreen
+import com.app.campusconnect.ui.authentication.RegistrationScreen
+import com.app.campusconnect.ui.authentication.WelcomeScreen
 
 @Composable
-fun AuthNavHost(
+fun AuthNavigation(
     viewModel: AuthViewModel = viewModel(),
     navController: NavHostController = rememberNavController(),
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = AuthScreen.valueOf(
-        backStackEntry?.destination?.route ?: AuthScreen.Welcome.name
-    )
+    val currentScreen = backStackEntry?.destination?.route?.let {
+        AuthScreen.valueOf(it)
+    } ?: AuthScreen.Welcome
 
-    val authFormState by viewModel.authFormState.collectAsState()
-    val uiState by viewModel.uiState.collectAsState()
+    val authState by viewModel.authState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -58,7 +62,7 @@ fun AuthNavHost(
             }
             composable(route = AuthScreen.Registration.name) {
                 RegistrationScreen(
-                    authFormState = authFormState,
+                    authFormState = authState.formState,
                     onSendButtonClick = { navController.navigate(AuthScreen.EnterProfile.name) },
                     onValueChange = { updatedState ->
                         viewModel.updateAuthFormState(updatedState)
@@ -70,7 +74,7 @@ fun AuthNavHost(
             }
             composable(route = AuthScreen.EmailCode.name) {
                 EmailCodeScreen(
-                    authFormState = authFormState,
+                    authFormState = authState.formState,
                     onVerifyClick = { navController.navigate(AuthScreen.NewPassword.name) },
                     onValueChange = { updatedState ->
                         viewModel.updateAuthFormState(updatedState)
@@ -82,7 +86,7 @@ fun AuthNavHost(
             }
             composable(route = AuthScreen.NewPassword.name) {
                 NewPasswordScreen(
-                    authFormState = authFormState,
+                    authFormState = authState.formState,
                     onSendClick = { navController.navigate(AuthScreen.EnterProfile.name) },
                     onValueChange = { updatedState ->
                         viewModel.updateAuthFormState(updatedState)
@@ -94,13 +98,13 @@ fun AuthNavHost(
             }
             composable(route = AuthScreen.EnterProfile.name) {
                 EnterProfileScreen(
-                    authUiState = uiState, // Passando o uiState
-                    authFormState = authFormState,
+                    uiState = authState.uiState, // Passando o uiState
+                    authFormState = authState.formState,
                     onAccessClick = { viewModel.authenticateUser() },
                     onValueChange = { updatedState ->
                         viewModel.updateAuthFormState(updatedState)
                     },
-                    retryAction = { viewModel.updateUiState(AuthUiState.Success()) }, // Função para tentar novamente
+                    retryAction = { viewModel.updateUiState(UiState.Success) }, // Função para tentar novamente
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(dimensionResource(id = R.dimen.padding_medium))

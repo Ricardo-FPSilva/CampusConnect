@@ -29,18 +29,18 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
+import com.app.campusconnect.data.uistate.common.UiState
 import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
-import com.app.campusconnect.data.uistate.dashboard.DashboardUiState
-import com.app.campusconnect.network.dashboard.models.Event
-import com.app.campusconnect.network.dashboard.models.User
-import com.app.campusconnect.ui.components.ErrorScreen
+import com.app.campusconnect.models.dashboard.Event
+import com.app.campusconnect.models.dashboard.User
+import com.app.campusconnect.theme.CampusConnectTheme
+import com.app.campusconnect.ui.common.ErrorScreen
+import com.app.campusconnect.ui.common.LoadingScreen
 import com.app.campusconnect.ui.dashboard.components.EventCard
-import com.app.campusconnect.ui.components.LoadingScreen
-import com.app.campusconnect.ui.theme.CampusConnectTheme
 
 @Composable
 fun HomeScreen(
-    dashboardUiState: DashboardUiState,
+    uiState: UiState,
     dashboardFormState: DashboardFormState,
     onEventClick: (Event) -> Unit,
     onValueChange: (DashboardFormState) -> Unit,
@@ -49,19 +49,19 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        when (dashboardUiState) {
-            is DashboardUiState.Loading -> LoadingScreen(modifier = modifier)
-            is DashboardUiState.Success -> ListEventsScreen(
+        when (uiState) {
+            is UiState.Loading -> LoadingScreen(modifier = modifier)
+            is UiState.Success -> ListEventsScreen(
                 dashboardFormState = dashboardFormState,
-                eventList = dashboardFormState.eventList,
+                eventList = dashboardFormState.eventsList,
                 onEventClick = onEventClick,
                 onValueChange = { newValue ->
                     onValueChange(dashboardFormState.copy(searchTerm = newValue))
                 },
                 onSearch = onSearch // Pass the onSearch lambda directly
             )
-            is DashboardUiState.Error -> ErrorScreen(
-                error = dashboardUiState.message,
+            is UiState.Error -> ErrorScreen(
+                error = uiState.message,
                 retryAction = retryAction,
                 modifier = modifier
             )
@@ -181,7 +181,7 @@ fun HomeScreenLightThemePreview() {
             )
         }
         ListEventsScreen(
-            dashboardFormState = DashboardFormState(eventList = mockData),
+            dashboardFormState = DashboardFormState(eventsList = mockData),
             eventList = mockData,
             onValueChange = {},
             onSearch = {},
@@ -214,7 +214,7 @@ fun HomeScreenDarkThemePreview() {
             )
         }
         ListEventsScreen(
-            dashboardFormState = DashboardFormState(eventList = mockData),
+            dashboardFormState = DashboardFormState(eventsList = mockData),
             eventList = mockData,
             onValueChange = {},
             onSearch = {},

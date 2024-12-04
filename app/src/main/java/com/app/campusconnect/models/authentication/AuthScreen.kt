@@ -1,4 +1,4 @@
-package com.app.campusconnect.ui.authentication.models
+package com.app.campusconnect.models.authentication
 
 import androidx.annotation.StringRes
 import com.app.campusconnect.R
