@@ -6,8 +6,8 @@ data class AuthFormState(
     val name: String = "",
     val course: String = "",
 
-    val registrationNumber: String = "",
-    val password: String = "",
+    val login: String = "ricardo.felipe3000@gmail.com",
+    val password: String = "123456",
 
     val newPassword: String = "",
     val confirmPassword: String = "", // Renomeado

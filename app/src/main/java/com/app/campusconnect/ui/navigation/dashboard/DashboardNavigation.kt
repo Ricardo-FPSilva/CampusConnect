@@ -1,5 +1,6 @@
 package com.app.campusconnect.ui.navigation.dashboard
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -15,17 +16,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.app.campusconnect.R
-import com.app.campusconnect.ui.dashboard.components.DashboardBottomAppBar
-import com.app.campusconnect.ui.dashboard.components.DashboardTopAppBar
-import com.app.campusconnect.ui.dashboard.components.EventCreationFab
-import com.app.campusconnect.ui.dashboard.components.EventNotFound
-import com.app.campusconnect.models.dashboard.DashboardScreen
 import com.app.campusconnect.ui.dashboard.DashboardViewModel
 import com.app.campusconnect.ui.dashboard.EventCreationScreen
 import com.app.campusconnect.ui.dashboard.EventDetailsScreen
 import com.app.campusconnect.ui.dashboard.HomeScreen
 import com.app.campusconnect.ui.dashboard.MyEventsScreen
+import com.app.campusconnect.ui.dashboard.ProfileScreen
 import com.app.campusconnect.ui.dashboard.SearchScreen
+import com.app.campusconnect.ui.dashboard.components.DashboardBottomAppBar
+import com.app.campusconnect.ui.dashboard.components.DashboardTopAppBar
+import com.app.campusconnect.ui.dashboard.components.EventCreationFab
+import com.app.campusconnect.ui.dashboard.components.EventNotFound
 
 
 @Composable
@@ -97,11 +98,16 @@ fun DashboardNavHost(
             }
             composable(route = DashboardScreen.EventDetails.name) {
                 val selectedEvent = dashboardState.formState.selectedEvent
+                val isSubscribed = dashboardState.formState.isSubscribed
                 if (selectedEvent != null) {
                     EventDetailsScreen(
                         event = selectedEvent,
+                        isSubscribed = isSubscribed,
                         onSubscribeClick = { event ->
-                            dashboardViewModel.eventRegistration(event.id)
+                            dashboardViewModel.subscribeEvent(event.id)
+                        },
+                        onUnsubscribeClick = { event ->
+                            dashboardViewModel.unsubscribeEvent(event.id)
                         },
                         modifier = Modifier
                             .fillMaxSize()
@@ -113,6 +119,37 @@ fun DashboardNavHost(
             }
             composable(route = DashboardScreen.EventCreation.name) {
                 EventCreationScreen(
+                    dashboardFormState = dashboardState.formState,
+                    onTitleChange = { title ->
+                        dashboardViewModel.updateDashboardFormState(
+                            dashboardState.formState.copy(
+                                eventCreated = dashboardState.formState
+                                    .eventCreated.copy(
+                                        title = title
+                                    )
+                            )
+                        )
+                    },
+                    onLocationChange = { location ->
+                        dashboardViewModel.updateDashboardFormState(
+                            dashboardState.formState.copy(
+                                eventCreated = dashboardState.formState
+                                    .eventCreated.copy(
+                                        location = location
+                                    )
+                            )
+                        )
+                    },
+                    onDescriptionChange = { description ->
+                        dashboardViewModel.updateDashboardFormState(
+                            dashboardState.formState.copy(
+                                eventCreated = dashboardState.formState
+                                    .eventCreated.copy(
+                                        description = description
+                                    )
+                            )
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                 )
@@ -137,7 +174,14 @@ fun DashboardNavHost(
                         .padding(dimensionResource(id = R.dimen.padding_medium))
                 )
             }
-            // Add composable for the Search screen
+            composable(route = DashboardScreen.Profile.name) {
+                ProfileScreen(
+                    dashboardFormState = dashboardState.formState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(dimensionResource(id = R.dimen.padding_medium))
+                )
+            }
             composable(route = DashboardScreen.Search.name) {
                 SearchScreen(
                     dashboardFormState = dashboardState.formState,

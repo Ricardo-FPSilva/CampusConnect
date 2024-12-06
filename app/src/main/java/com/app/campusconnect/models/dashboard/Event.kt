@@ -1,6 +1,7 @@
 package com.app.campusconnect.models.dashboard
 
 
+import com.app.campusconnect.models.common.User
 import com.google.gson.annotations.SerializedName
 
 data class Event (

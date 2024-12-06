@@ -3,8 +3,8 @@ package com.app.campusconnect.models.authentication
 import com.google.gson.annotations.SerializedName
 
 data class LoginRequest(
-    @SerializedName("email")
-    val email: String,
+    @SerializedName("login")
+    val login: String,
     @SerializedName("password")
     val password: String
 )

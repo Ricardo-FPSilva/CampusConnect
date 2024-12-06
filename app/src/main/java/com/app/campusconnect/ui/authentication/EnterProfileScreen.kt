@@ -92,13 +92,11 @@ fun LoginFormScreen(
                     .size(dimensionResource(id = R.dimen.half_screen_size))
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.campus_connect_logo),
-                    contentDescription = stringResource(R.string.campus_connect_logo),
+                    painter = painterResource(id = R.drawable._profile_transparente),
+                    contentDescription = stringResource(R.string.profile_image),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(MaterialTheme.shapes.extraLarge)
-                        .scale(1.3f)
                 )
             }
             Spacer(modifier = Modifier.weight(2f))
@@ -114,7 +112,7 @@ fun LoginFormScreen(
                     modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
                 )
                 Text(
-                    text = authFormState.registrationNumber,
+                    text = authFormState.login,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))

@@ -32,7 +32,7 @@ import com.app.campusconnect.R
 import com.app.campusconnect.data.uistate.common.UiState
 import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
 import com.app.campusconnect.models.dashboard.Event
-import com.app.campusconnect.models.dashboard.User
+import com.app.campusconnect.models.common.User
 import com.app.campusconnect.theme.CampusConnectTheme
 import com.app.campusconnect.ui.common.ErrorScreen
 import com.app.campusconnect.ui.common.LoadingScreen

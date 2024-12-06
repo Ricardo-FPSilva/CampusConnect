@@ -3,6 +3,7 @@ package com.app.campusconnect.ui.dashboard
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.campusconnect.data.datastore.DataStoreManager
 import com.app.campusconnect.data.uistate.ScreenState
 import com.app.campusconnect.data.uistate.common.UiState
 import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
@@ -13,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -22,7 +24,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val dashboardRepository: DashboardRepository,
+    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
+
 
     private val _dashboardState = MutableStateFlow(
         ScreenState(
@@ -32,24 +36,32 @@ class DashboardViewModel @Inject constructor(
     )
     val dashboardState: StateFlow<ScreenState<DashboardFormState>> = _dashboardState.asStateFlow()
 
+
+
     init {
-        getEventsEnrolled()
         getEventsList()
+        getEventsEnrolled()
+        getUserProfile()
     }
 
     fun getEventsList() {
         viewModelScope.launch {
             _dashboardState.update { it.copy(uiState = UiState.Loading) }
-            val result =  fetchEvents()
-            _dashboardState.update { it.copy(uiState = result) }
+            _dashboardState.update { it.copy(uiState = fetchEvents()) }
         }
     }
 
     fun getEventsEnrolled() {
         viewModelScope.launch {
             _dashboardState.update { it.copy(uiState = UiState.Loading) }
-            val result = fetchEventsEnrolled()
-            _dashboardState.update { it.copy(uiState = result) }
+            _dashboardState.update { it.copy(uiState = fetchEventsEnrolled()) }
+        }
+    }
+
+    private fun getUserProfile() {
+        viewModelScope.launch {
+            _dashboardState.update { it.copy(uiState = UiState.Loading) }
+            _dashboardState.update { it.copy(uiState = recoverUser()) }
         }
     }
 
@@ -68,6 +80,7 @@ class DashboardViewModel @Inject constructor(
             )
         ) }
     }
+
     fun updateDashboardFormState(updatedState: DashboardFormState) {
         _dashboardState.update { it.copy(formState = updatedState) }
     }
@@ -86,17 +99,23 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    fun eventRegistration(id: Int) {
+    fun subscribeEvent(id: Int) {
         viewModelScope.launch {
+            Log.d("DashboardViewModel", "Subscribing to event with ID: $id")
             _dashboardState.update { it.copy(uiState = UiState.Loading) }
-            _dashboardState.update { it.copy(uiState = submitEventRegistration(id)) }
+            _dashboardState.update { it.copy(uiState = submitSubscribeEvent(id)) }
+            _dashboardState.update { it.copy(formState = it.formState.copy(isSubscribed = true)) }
+            getEventsEnrolled()
         }
     }
 
-    fun eventUnregistration(id: Int) {
+    fun unsubscribeEvent(id: Int) {
         viewModelScope.launch {
+            Log.d("DashboardViewModel", "Unsubscribing from event with ID: $id")
             _dashboardState.update { it.copy(uiState = UiState.Loading) }
-            _dashboardState.update { it.copy(uiState = submitEventUnregistration(id)) }
+            _dashboardState.update { it.copy(uiState = submitUnsubscribeEvent(id)) }
+            _dashboardState.update { it.copy(formState = it.formState.copy(isSubscribed = false)) }
+            getEventsEnrolled()
         }
     }
 
@@ -112,8 +131,7 @@ class DashboardViewModel @Inject constructor(
             Log.e("DashboardViewModel", "Error fetching events", e)
             when (e) {
                 is IOException -> UiState.Error(
-                    ErrorType.NETWORK,
-                    "Erro de rede. Verifique sua conexão."
+                    ErrorType.NETWORK, "Erro de rede. Verifique sua conexão."
                 )
                 is HttpException -> {
                     when (e.code()) {
@@ -131,29 +149,29 @@ class DashboardViewModel @Inject constructor(
 
     private suspend fun fetchEventsEnrolled(): UiState {
         return runCatching {
-            val events = dashboardRepository.getEventsEnrolled()
             _dashboardState.update { it.copy(
                 formState = it.formState.copy(
-                    eventsListEnrolled = events
+                    eventsListEnrolled = dashboardRepository.getEventsEnrolled()
                 )
             ) }
+            UiState.Success
+        }.onFailure {
+            Log.e("DashboardViewModel", "Error fetching enrolled events", it)
             UiState.Success
         }.getOrElse { e ->
             Log.e("DashboardViewModel", "Error fetching enrolled events", e)
             when (e) {
                 is IOException -> UiState.Error(
-                    ErrorType.NETWORK,
-                    "Erro de rede. Verifique sua conexão."
+                    ErrorType.NETWORK, "Erro de rede. Verifique sua conexão."
                 )
                 is HttpException -> {
                     when (e.code()) {
+                        400 -> UiState.Success
                         404 -> UiState.Error(
-                            ErrorType.SERVER,
-                            "Eventos inscritos não encontrados."
+                            ErrorType.SERVER, "Eventos inscritos não encontrados."
                         )
                         else -> UiState.Error(
-                            ErrorType.SERVER,
-                            "Erro do servidor (${e.code()})."
+                            ErrorType.SERVER, "Erro do servidor (${e.code()})."
                         )
                     }
                 }
@@ -162,14 +180,45 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    private suspend fun submitEventRegistration(id: Int): UiState {
+    private suspend fun recoverUser() : UiState{
         return runCatching {
-            dashboardRepository.eventRegistration(id = id)
-            _dashboardState.update { it.copy(
-                formState = it.formState.copy(
-                    eventsListEnrolled = dashboardRepository.getEventsEnrolled()
-                )
-            ) }
+            val user = dataStoreManager.getUser().firstOrNull()
+            Log.d("DashboardViewModel", "User: $user")
+            user
+        }.getOrElse {
+            Log.e("DashboardViewModel", "Error recovering user", it)
+            null
+        }.let { user ->
+            if (user != null) {
+                _dashboardState.update {
+                    it.copy(
+                        formState = it.formState.copy(
+                            user = user
+                        )
+                    )
+                }
+                when (user.role) {
+                    "STUDENT" -> _dashboardState.update {
+                        it.copy(formState = it.formState.copy(user = it.formState.user?.copy(role = "Student")))
+                    }
+                    "TEACHER" -> _dashboardState.update {
+                        it.copy(formState = it.formState.copy(user = it.formState.user?.copy(role = "Teacher")))
+                    }
+                    "INSTITUTE" -> _dashboardState.update {
+                        it.copy(formState = it.formState.copy(user = it.formState.user?.copy(role = "Institute")))
+                    }
+                }
+                UiState.Success
+            } else {
+                UiState.Error(ErrorType.UNKNOWN, "Erro ao recuperar usuário.")
+            }
+        }
+    }
+
+    private suspend fun submitSubscribeEvent(id: Int): UiState {
+        return runCatching {
+            dashboardRepository.subscribeEvent(id = id)
+            Log.d("DashboardViewModel", "Event subscribed successfully")
             UiState.Success
         }.getOrElse { e ->
             Log.e("DashboardViewModel", "Error registering for event", e)
@@ -199,14 +248,10 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    private suspend fun submitEventUnregistration(id: Int): UiState {
+    private suspend fun submitUnsubscribeEvent(id: Int): UiState {
         return runCatching {
-            dashboardRepository.eventUnregistration(id = id)
-            _dashboardState.update { it.copy(
-                formState = it.formState.copy(
-                    eventsListEnrolled = dashboardRepository.getEventsEnrolled()
-                )
-            ) }
+            dashboardRepository.unsubscribeEvent(id = id)
+            Log.d("DashboardViewModel", "Event unsubscribed successfully")
             UiState.Success
         }.getOrElse { e ->
             Log.e("DashboardViewModel", "Error unregistering for event", e)

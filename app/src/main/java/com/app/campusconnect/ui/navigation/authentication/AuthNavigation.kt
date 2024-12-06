@@ -18,7 +18,6 @@ import androidx.navigation.compose.rememberNavController
 import com.app.campusconnect.R
 import com.app.campusconnect.data.uistate.common.UiState
 import com.app.campusconnect.ui.authentication.components.AuthAppBar
-import com.app.campusconnect.models.authentication.AuthScreen
 import com.app.campusconnect.ui.authentication.AuthViewModel
 import com.app.campusconnect.ui.authentication.EmailCodeScreen
 import com.app.campusconnect.ui.authentication.EnterProfileScreen

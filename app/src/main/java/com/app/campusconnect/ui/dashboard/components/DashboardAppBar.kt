@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.app.campusconnect.models.dashboard.DashboardScreen
+import com.app.campusconnect.ui.navigation.dashboard.DashboardScreen
 import com.app.campusconnect.theme.CampusConnectTheme
 
 
@@ -72,7 +72,7 @@ fun DashboardBottomAppBar (
             )
             ButtonAppBar(
                 "Perfil",
-                onClick = { },
+                onClick = { onTabSelected(DashboardScreen.Profile) },
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxSize()

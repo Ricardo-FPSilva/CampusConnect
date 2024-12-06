@@ -1,10 +1,8 @@
 package com.app.campusconnect.ui.dashboard
 
 
-import android.app.DatePickerDialog
-import android.widget.DatePicker
+import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,28 +21,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
+import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
 import com.app.campusconnect.theme.CampusConnectTheme
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 @Composable
 fun EventCreationScreen(
+    dashboardFormState: DashboardFormState,
+    onTitleChange: (String) -> Unit,
+    onLocationChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ){
     LazyColumn(
@@ -65,25 +60,25 @@ fun EventCreationScreen(
                     .padding(dimensionResource(id = R.dimen.padding_small))
             ){
                 EventTitleInput(
-                    title = "",
-                    onTitleChange = {},
+                    title = dashboardFormState.eventCreated.title,
+                    onTitleChange = onTitleChange,
                     modifier = Modifier
                         .padding(dimensionResource(id = R.dimen.padding_small))
                 )
                 EventDateInput(
-                    onDateSelected = {},
+                    dashboardFormState = dashboardFormState,
                     modifier = Modifier
                         .padding(dimensionResource(id = R.dimen.padding_small))
                 )
                 EventLocationInput(
-                    location = "",
-                    onLocationChange = {},
+                    location = dashboardFormState.eventCreated.location,
+                    onLocationChange = onLocationChange,
                     modifier = Modifier
                         .padding(dimensionResource(id = R.dimen.padding_small))
                 )
                 EventDescriptionInput(
-                    description = "",
-                    onDescriptionChange = {},
+                    description = dashboardFormState.eventCreated.description,
+                    onDescriptionChange = onDescriptionChange,
                     modifier = Modifier
                         .padding(dimensionResource(id = R.dimen.padding_small))
                 )
@@ -166,32 +161,22 @@ fun EventDescriptionInput(
 
 @Composable
 fun EventDateInput(
-    onDateSelected: (String) -> Unit,
+    dashboardFormState: DashboardFormState,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val calendar = Calendar.getInstance()
-    val initialYear = calendar.get(Calendar.YEAR)
-    val initialMonth = calendar.get(Calendar.MONTH)
-    val initialDay = calendar.get(Calendar.DAY_OF_MONTH)
-
-    val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    var selectedDate by remember { mutableStateOf(dateFormatter.format(calendar.time)) }
-    var showDialog by remember { mutableStateOf(false) }
-
     Row {
         OutlinedTextField(
-            value = selectedDate,
-            onValueChange = { },
+            value = dashboardFormState.eventCreated.eventDate,
+            onValueChange = {
+                Log.d("DashboardViewModel", "EventScreen: : OnValueChange$it")
+            },
             label = { Text("Data") },
             modifier = modifier
                 .weight(1f)
-                .clickable { showDialog = true },
-            readOnly = true
         )
 
         Button(
-            onClick = { showDialog = true },
+            onClick = {  },
             modifier = Modifier
                 .align(Alignment.CenterVertically)
         ) {
@@ -199,22 +184,6 @@ fun EventDateInput(
         }
     }
 
-    if (showDialog) {
-        DatePickerDialog(
-            context,
-            { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-                calendar.set(selectedYear, selectedMonth, selectedDay)
-                selectedDate = dateFormatter.format(calendar.time)
-                onDateSelected(selectedDate)
-            },
-            initialYear,
-            initialMonth,
-            initialDay
-        ).apply {
-            setOnCancelListener { showDialog = false }
-            show()
-        }
-    }
 }
 
 @Composable
@@ -228,8 +197,7 @@ fun EventLocationInput(
         onValueChange = onLocationChange,
         label = { Text("Localização") },
         modifier = modifier.fillMaxWidth(),
-        // Aqui você pode adicionar lógica para mostrar sugestões de endereço
-        // usando o Google Places API ou outro serviço similar
+
     )
 }
 
@@ -237,13 +205,23 @@ fun EventLocationInput(
 @Composable
 fun EventCreationScreenLightThemePreview(){
     CampusConnectTheme(darkTheme = false) {
-        EventCreationScreen()
+        EventCreationScreen(
+            dashboardFormState = DashboardFormState(),
+            onTitleChange = {},
+            onLocationChange = {},
+            onDescriptionChange = {},
+        )
     }
 }
 @Preview
 @Composable
 fun EventCreationScreenDarkThemePreview(){
     CampusConnectTheme(darkTheme = true) {
-        EventCreationScreen()
+        EventCreationScreen(
+            dashboardFormState = DashboardFormState(),
+            onTitleChange = {},
+            onLocationChange = {},
+            onDescriptionChange = {},
+        )
     }
 }

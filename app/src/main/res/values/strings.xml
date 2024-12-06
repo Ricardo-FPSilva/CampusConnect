@@ -40,5 +40,14 @@
     <string name="event_creation">Event Creation</string>
     <string name="my_events">My Events</string>
     <string name="nenhum_evento_encontrado">Nenhum evento encontrado.</string>
+    <string name="unsubscribe">Unsubscribe</string>
+    <string name="login">Login</string>
+    <string name="email_ou_matricula">Email ou Matricula</string>
+    <string name="seu_registro">Seu Registro:</string>
+    <string name="profile_image">profile image</string>
+    <string name="user_title">%1$s %2$s</string>
+    <string name="profile">Profile</string>
+    <string name="matricula">Matricula:</string>
+    <string name="registration_number">Registration Number:</string>
 
 </resources>

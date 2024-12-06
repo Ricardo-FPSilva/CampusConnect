@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -29,7 +30,7 @@ class AuthViewModel @Inject constructor(
     private val _authState = MutableStateFlow(
         ScreenState(
             formState = AuthFormState(),
-            uiState = UiState.Loading
+            uiState = UiState.Success
         )
     )
     val authState: StateFlow<ScreenState<AuthFormState>> = _authState.asStateFlow()
@@ -50,16 +51,20 @@ class AuthViewModel @Inject constructor(
 
     private suspend fun fetchUser(): UiState {
         return runCatching {
-            val registrationNumber = _authState.value.formState.registrationNumber
+            val login  = _authState.value.formState.login
             val password = _authState.value.formState.password
 
             val loginResponse = authRepository.login(
                 LoginRequest(
-                    email = registrationNumber,
+                    login = login,
                     password = password
                 )
             )
             dataStoreManager.storeToken(loginResponse.token)
+            dataStoreManager.storeUser(loginResponse.user)
+
+            Log.d("AuthViewModel", "User: ${loginResponse.user}")
+
 
             _authState.update { it.copy(
                 formState = it.formState.copy(

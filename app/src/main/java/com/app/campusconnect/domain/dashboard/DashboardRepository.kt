@@ -6,7 +6,7 @@ import com.app.campusconnect.models.dashboard.Event
 interface DashboardRepository {
     suspend fun getEvents(): List<Event>
     suspend fun getEventsEnrolled(): List<Enrollment>
-    suspend fun eventRegistration(id: Int)
-    suspend fun eventUnregistration(id: Int)
+    suspend fun subscribeEvent(id: Int): Unit
+    suspend fun unsubscribeEvent(id: Int): Unit
 }
 

@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,17 +23,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
+import com.app.campusconnect.models.common.User
 import com.app.campusconnect.models.dashboard.Event
-import com.app.campusconnect.models.dashboard.User
 import com.app.campusconnect.theme.CampusConnectTheme
 
 @Composable
 fun EventDetailsScreen(
     event: Event,
+    isSubscribed: Boolean,
     onSubscribeClick: (Event) -> Unit,
+    onUnsubscribeClick: (Event) -> Unit,
     modifier: Modifier = Modifier,
 ){
-
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -68,17 +71,29 @@ fun EventDetailsScreen(
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
-                Button(
-                    onClick =  {
-                        onSubscribeClick(event)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(text = stringResource(R.string.subscribe))
+
+                if (isSubscribed) {
+                    ButtonSubscribeOrUnsubscribe(
+                        onClick = { onUnsubscribeClick(event) },
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors( // Mudar a cor do botão
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                        ),
+                        text = stringResource(R.string.unsubscribe)
+                    )
+                } else {
+                    ButtonSubscribeOrUnsubscribe(
+                        onClick = { onSubscribeClick(event) },
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors( // Mudar a cor do botão
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        ),
+                        text = stringResource(R.string.subscribe)
+                    )
                 }
             }
-
         }
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
         Column (
@@ -105,6 +120,23 @@ fun EventDetailsScreen(
     }
 
 }
+@Composable
+fun ButtonSubscribeOrUnsubscribe(
+    onClick: () -> Unit,
+    colors: ButtonColors = ButtonDefaults.buttonColors(),
+    text: String,
+    modifier: Modifier = Modifier
+){
+    Button(
+        onClick = onClick,
+        modifier = modifier
+            .fillMaxWidth(),
+        colors = colors,
+    ) {
+        Text(text = text) // Mudar o texto do botão
+    }
+}
+
 
 
 
@@ -128,7 +160,9 @@ fun EventDetailsScreenLightThemePreview() {
                 "24/04/2002",
                 user
             ),
+            isSubscribed = false,
             onSubscribeClick = {},
+            onUnsubscribeClick = {},
             modifier = Modifier
                 .padding(16.dp)
         )
@@ -155,6 +189,8 @@ fun EventDetailsScreenDarkThemePreview() {
                 user
             ),
             onSubscribeClick = {},
+            onUnsubscribeClick = {},
+            isSubscribed = false,
             modifier = Modifier
                 .padding(16.dp)
         )

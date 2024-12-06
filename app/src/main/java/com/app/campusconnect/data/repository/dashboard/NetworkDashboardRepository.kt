@@ -10,7 +10,7 @@ class NetworkDashboardRepository(
 ) : DashboardRepository {
     override suspend fun getEvents(): List<Event> = dashboardApiService.getEvents()
     override suspend fun getEventsEnrolled(): List<Enrollment> = dashboardApiService.getEventsEnrolled()
-    override suspend fun eventRegistration(id: Int) = dashboardApiService.eventRegistration(id)
-    override suspend fun eventUnregistration(id: Int) = dashboardApiService.eventUnregistration(id)
+    override suspend fun subscribeEvent(id: Int) = dashboardApiService.subscribeEvent(id)
+    override suspend fun unsubscribeEvent(id: Int) = dashboardApiService.unsubscribeEvent(id)
 
 }

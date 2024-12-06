@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +33,7 @@ import com.app.campusconnect.data.uistate.common.UiState
 import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
 import com.app.campusconnect.models.dashboard.Enrollment
 import com.app.campusconnect.models.dashboard.Event
-import com.app.campusconnect.models.dashboard.User
+import com.app.campusconnect.models.common.User
 import com.app.campusconnect.theme.CampusConnectTheme
 import com.app.campusconnect.ui.common.ErrorScreen
 import com.app.campusconnect.ui.common.LoadingScreen
@@ -221,6 +222,7 @@ fun SubOrCreateOutlineButton (
             bottomStart = bottomStart,
             bottomEnd = bottomEnd
         ),
+        border = ButtonDefaults.outlinedButtonBorder(false),
         colors = buttonColors,
         onClick = { onSelectionChange(!isSelected) },
         modifier = modifier
@@ -239,10 +241,7 @@ fun EventsCreatedList(
     onEventClick: (Event) -> Unit,
     modifier: Modifier = Modifier
 ){
-    Text(
-        text = "Events created",
-        modifier = Modifier
-    )
+    Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)))
     LazyColumn (
         modifier = modifier
     ) {
@@ -262,10 +261,7 @@ fun SubscriptionsList(
     onEventClick: (Event) -> Unit,
     modifier: Modifier = Modifier
 ){
-    Text(
-        text = "Subscriptions",
-        modifier = Modifier
-    )
+    Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)))
     LazyColumn (
         modifier = modifier
     ){
@@ -288,7 +284,7 @@ fun MyEventCard(
     modifier: Modifier = Modifier
 ){
     Card (
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation =  dimensionResource(R.dimen.elevation_small)),
         modifier = modifier
             .padding(bottom = dimensionResource(R.dimen.padding_large))
             .aspectRatio(3.5f)
@@ -296,6 +292,7 @@ fun MyEventCard(
         OutlinedButton(
             onClick = { onEventClick(event) },
             shape = MaterialTheme.shapes.medium,
+            border = ButtonDefaults.outlinedButtonBorder(false),
             contentPadding = PaddingValues(0.dp),
             modifier = Modifier.fillMaxSize()
         ) {

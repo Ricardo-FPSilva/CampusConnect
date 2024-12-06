@@ -44,18 +44,18 @@ fun RegistrationScreen(
         modifier = modifier
     ) {
         Text(
-            text = stringResource(R.string.digite_sua_matricula),
+            text = stringResource(R.string.seu_registro),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)))
         RegistrationField(
-            label = R.string.registration,
+            label = R.string.email_ou_matricula,
             leadingIcon = Icons.Default.AccountCircle,
-            value = authFormState.registrationNumber,
+            value = authFormState.login,
             onValueChange = { newValue ->
-                onValueChange(authFormState.copy(registrationNumber = newValue))
+                onValueChange(authFormState.copy(login = newValue))
             },
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Done

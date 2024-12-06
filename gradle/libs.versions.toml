@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.2"
+agp = "8.7.3"
 animation = "libs.androidx.compose.animation.version"
 coilCompose = "2.5.0"
 compiler = "1.5.15"
