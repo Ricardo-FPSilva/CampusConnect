@@ -15,9 +15,9 @@ interface DashboardApiService {
     suspend fun  getEventsEnrolled(): List<Enrollment>
 
     @POST("api/events/{id}/enroll")
-    suspend fun subscribeEvent(@Path("id") id: Int): Unit
+    suspend fun subscribeEvent(@Path("id") id: Int)
 
     @DELETE("api/events/{id}/unroll")
-    suspend fun unsubscribeEvent(@Path("id") id: Int): Unit
+    suspend fun unsubscribeEvent(@Path("id") id: Int)
 
 }

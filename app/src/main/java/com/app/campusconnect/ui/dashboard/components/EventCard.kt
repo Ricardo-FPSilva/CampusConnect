@@ -1,6 +1,5 @@
 package com.app.campusconnect.ui.dashboard.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
