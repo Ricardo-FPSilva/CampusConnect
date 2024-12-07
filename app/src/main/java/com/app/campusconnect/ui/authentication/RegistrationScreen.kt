@@ -29,15 +29,44 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.app.campusconnect.R
 import com.app.campusconnect.data.uistate.authentication.AuthFormState
+import com.app.campusconnect.data.uistate.common.UiState
 import com.app.campusconnect.theme.CampusConnectTheme
+import com.app.campusconnect.ui.common.ErrorScreen
+import com.app.campusconnect.ui.common.LoadingScreen
 
 @Composable
 fun RegistrationScreen(
+    uiState: UiState,
+    authFormState: AuthFormState,
+    onSendButtonClick: () -> Unit,
+    onValueChange: (AuthFormState) -> Unit,
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    when (uiState) {
+        is UiState.Loading -> LoadingScreen(modifier = modifier)
+        is UiState.Success -> CredentialForm(
+            authFormState = authFormState,
+            onSendButtonClick = onSendButtonClick,
+            onValueChange = onValueChange,
+            modifier = modifier
+        )
+        is UiState.Error -> ErrorScreen(
+            error = uiState.message,
+            retryAction = retryAction,
+            modifier = modifier
+        )
+    }
+
+}
+
+@Composable
+fun CredentialForm(
     authFormState: AuthFormState,
     onSendButtonClick: () -> Unit,
     onValueChange: (AuthFormState) -> Unit,
     modifier: Modifier = Modifier,
-) {
+){
     Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
@@ -120,7 +149,7 @@ fun RegistrationField(
 @Composable
 fun RegistrationLightThemePreview() {
     CampusConnectTheme(darkTheme = false) {
-        RegistrationScreen(
+        CredentialForm(
             authFormState = AuthFormState(),
             onSendButtonClick = {},
             onValueChange = {},
@@ -135,7 +164,7 @@ fun RegistrationLightThemePreview() {
 @Composable
 fun RegistrationDarkThemePreview() {
     CampusConnectTheme(darkTheme = true) {
-        RegistrationScreen(
+        CredentialForm(
             authFormState = AuthFormState(),
             onSendButtonClick = {},
             onValueChange = {},

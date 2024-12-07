@@ -59,7 +59,11 @@ fun ProfileScreen(
         Text(
             text = stringResource(
                 R.string.user_title,
-                dashboardFormState.user?.role ?: "",
+                dashboardFormState.user?.role
+                    ?.lowercase()
+                    ?.replaceFirstChar {
+                        it.uppercase()
+                    } ?: "",
                 dashboardFormState.user?.name ?: ""
             ),
             style = MaterialTheme.typography.headlineMedium,

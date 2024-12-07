@@ -110,13 +110,7 @@ fun LoginFormScreen(
                     modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
                 )
                 Text(
-                    text = authFormState.login,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
-                )
-                Text(
-                    text = authFormState.course,
+                    text = authFormState.role,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )

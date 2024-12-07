@@ -27,7 +27,7 @@ import com.app.campusconnect.ui.authentication.WelcomeScreen
 
 @Composable
 fun AuthNavigation(
-    viewModel: AuthViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel(),
     navController: NavHostController = rememberNavController(),
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -35,7 +35,7 @@ fun AuthNavigation(
         AuthScreen.valueOf(it)
     } ?: AuthScreen.Welcome
 
-    val authState by viewModel.authState.collectAsState()
+    val authState by authViewModel.authState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -61,13 +61,20 @@ fun AuthNavigation(
             }
             composable(route = AuthScreen.Registration.name) {
                 RegistrationScreen(
+                    uiState = authState.uiState,
                     authFormState = authState.formState,
-                    onSendButtonClick = { navController.navigate(AuthScreen.EnterProfile.name) },
-                    onValueChange = { updatedState ->
-                        viewModel.updateAuthFormState(updatedState)
+                    onSendButtonClick = {
+                        authViewModel.getProfileLogin(
+                            navTo = { navController.navigate(AuthScreen.EnterProfile.name) },
+                            navBack = { navController.navigate(AuthScreen.Registration.name) }
+                        )
                     },
+                    onValueChange = { updatedState ->
+                        authViewModel.updateAuthFormState(updatedState)
+                    },
+                    retryAction = { authViewModel.updateUiState(UiState.Success) },
                     modifier = Modifier
-                        .fillMaxHeight()
+                        .fillMaxSize()
                         .padding(dimensionResource(id = R.dimen.padding_medium))
                 )
             }
@@ -76,7 +83,7 @@ fun AuthNavigation(
                     authFormState = authState.formState,
                     onVerifyClick = { navController.navigate(AuthScreen.NewPassword.name) },
                     onValueChange = { updatedState ->
-                        viewModel.updateAuthFormState(updatedState)
+                        authViewModel.updateAuthFormState(updatedState)
                     },
                     modifier = Modifier
                         .fillMaxSize()
@@ -88,10 +95,10 @@ fun AuthNavigation(
                     authFormState = authState.formState,
                     onSendClick = { navController.navigate(AuthScreen.EnterProfile.name) },
                     onValueChange = { updatedState ->
-                        viewModel.updateAuthFormState(updatedState)
+                        authViewModel.updateAuthFormState(updatedState)
                     },
                     modifier = Modifier
-                        .fillMaxHeight()
+                        .fillMaxSize()
                         .padding(dimensionResource(id = R.dimen.padding_medium))
                 )
             }
@@ -99,11 +106,11 @@ fun AuthNavigation(
                 EnterProfileScreen(
                     uiState = authState.uiState, // Passando o uiState
                     authFormState = authState.formState,
-                    onAccessClick = { viewModel.authenticateUser() },
+                    onAccessClick = { authViewModel.authenticateUser() },
                     onValueChange = { updatedState ->
-                        viewModel.updateAuthFormState(updatedState)
+                        authViewModel.updateAuthFormState(updatedState)
                     },
-                    retryAction = { viewModel.updateUiState(UiState.Success) }, // Função para tentar novamente
+                    retryAction = { authViewModel.updateUiState(UiState.Success) }, // Função para tentar novamente
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(dimensionResource(id = R.dimen.padding_medium))
