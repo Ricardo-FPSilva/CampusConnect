@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.app.campusconnect.theme.CampusConnectTheme
-import java.util.Vector
 
 @Composable
 fun EventCreationFab(

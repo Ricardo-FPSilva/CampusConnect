@@ -1,7 +1,5 @@
 package com.app.campusconnect.data.uistate.dashboard
 
-import androidx.compose.foundation.interaction.InteractionSource
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import com.app.campusconnect.models.common.User
 import com.app.campusconnect.models.dashboard.Enrollment
 import com.app.campusconnect.models.dashboard.Event

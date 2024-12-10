@@ -1,7 +1,5 @@
 package com.app.campusconnect.ui.dashboard
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
 import com.app.campusconnect.data.uistate.common.UiState
 import com.app.campusconnect.data.uistate.dashboard.DashboardFormState
-import com.app.campusconnect.models.dashboard.Event
 import com.app.campusconnect.models.common.User
+import com.app.campusconnect.models.dashboard.Event
 import com.app.campusconnect.theme.CampusConnectTheme
 import com.app.campusconnect.ui.common.ErrorScreen
 import com.app.campusconnect.ui.common.LoadingScreen
@@ -160,8 +158,6 @@ fun EventList(
 }
 
 
-
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenLightThemePreview() {
