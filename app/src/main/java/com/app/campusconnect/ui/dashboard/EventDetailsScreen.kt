@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -80,6 +81,7 @@ fun EventDetailsScreen(
                         colors = ButtonDefaults.buttonColors( // Mudar a cor do botão
                             containerColor = MaterialTheme.colorScheme.tertiaryContainer
                         ),
+                        colorText = MaterialTheme.colorScheme.onTertiaryContainer,
                         text = stringResource(R.string.unsubscribe)
                     )
                 } else {
@@ -90,6 +92,7 @@ fun EventDetailsScreen(
                         colors = ButtonDefaults.buttonColors( // Mudar a cor do botão
                             containerColor = MaterialTheme.colorScheme.primaryContainer
                         ),
+                        colorText = MaterialTheme.colorScheme.onPrimaryContainer,
                         text = stringResource(R.string.subscribe)
                     )
                 }
@@ -123,6 +126,7 @@ fun EventDetailsScreen(
 @Composable
 fun ButtonSubscribeOrUnsubscribe(
     onClick: () -> Unit,
+    colorText: Color,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     text: String,
     modifier: Modifier = Modifier
@@ -133,7 +137,10 @@ fun ButtonSubscribeOrUnsubscribe(
             .fillMaxWidth(),
         colors = colors,
     ) {
-        Text(text = text) // Mudar o texto do botão
+        Text(
+            text = text,
+            color = colorText
+        ) // Mudar o texto do botão
     }
 }
 

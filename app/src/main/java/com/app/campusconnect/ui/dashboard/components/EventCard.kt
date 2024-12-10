@@ -1,7 +1,9 @@
 package com.app.campusconnect.ui.dashboard.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ButtonDefaults
@@ -17,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.app.campusconnect.R
 import com.app.campusconnect.models.dashboard.Event
@@ -29,6 +32,7 @@ fun EventCard(
 ) {
     Card(
         modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
         elevation = CardDefaults.cardElevation(defaultElevation =  dimensionResource(R.dimen.elevation_small))
     ) {
         OutlinedButton(
@@ -38,20 +42,27 @@ fun EventCard(
             border = ButtonDefaults.outlinedButtonBorder(false),
             modifier = Modifier.fillMaxSize()
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Image(
-                    painter = painterResource(id = R.drawable.campus_connect_logo),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
+            Column (
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ){
+                Box(modifier = Modifier.weight(2f)){
+                    Image(
+                        painter = painterResource(id = R.drawable.campus_connect_logo),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                }
                 Text(
                     text = event.title,
                     style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    textAlign = TextAlign.Center,
+
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.BottomCenter)
                 )
             }
         }

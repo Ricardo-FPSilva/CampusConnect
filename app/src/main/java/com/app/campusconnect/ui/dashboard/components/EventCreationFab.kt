@@ -9,13 +9,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.app.campusconnect.theme.CampusConnectTheme
+import java.util.Vector
 
 @Composable
 fun EventCreationFab(
+    imageVector: ImageVector,
     onFabClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -31,7 +34,7 @@ fun EventCreationFab(
                 }
         ) {
            Icon(
-                imageVector = Icons.Default.Add,
+                imageVector = imageVector,
                 contentDescription = "Adicionar evento",
                 tint = Color.White
            )
@@ -44,7 +47,10 @@ fun EventCreationFab(
 @Composable
 fun EventCreationFabLightThemePreview() {
     CampusConnectTheme(darkTheme = false) {
-        EventCreationFab(onFabClick = {})
+        EventCreationFab(
+            imageVector = Icons.Default.Add,
+            onFabClick = {}
+        )
     }
 }
 
@@ -52,7 +58,10 @@ fun EventCreationFabLightThemePreview() {
 @Composable
 fun EventCreationFabDarkThemePreview() {
     CampusConnectTheme(darkTheme = true) {
-        EventCreationFab(onFabClick = {})
+        EventCreationFab(
+            imageVector = Icons.Default.Add,
+            onFabClick = {}
+        )
     }
 }
 

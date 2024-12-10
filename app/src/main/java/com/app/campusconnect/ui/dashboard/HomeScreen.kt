@@ -113,6 +113,7 @@ fun ListEventsScreen(
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
         EventList(
             eventList = eventList,
+            category = "Novos Eventos",
             onEventClick = onEventClick,
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_small))
@@ -121,7 +122,8 @@ fun ListEventsScreen(
         )
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
         EventList(
-            eventList = eventList,
+            eventList = eventList.reversed(),
+            category = "Proximos Eventos",
             onEventClick = onEventClick,
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_small))
@@ -135,12 +137,13 @@ fun ListEventsScreen(
 @Composable
 fun EventList(
     eventList: List<Event>,
+    category: String,
     onEventClick: (Event) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column {
         Text(
-            text = "Categoria",
+            text = category,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
         )

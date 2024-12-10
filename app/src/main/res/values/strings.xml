@@ -33,7 +33,7 @@
     <string name="code">Código</string>
     <string name="home">Home</string>
     <string name="search">Pesquisar</string>
-    <string name="subscribe">Inscreva-se</string>
+    <string name="subscribe">Subscribe</string>
     <string name="local">Local: %1$s</string>
     <string name="date">Data: %1$s</string>
     <string name="event_details">Event Details</string>

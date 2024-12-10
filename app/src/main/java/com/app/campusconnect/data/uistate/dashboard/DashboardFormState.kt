@@ -1,5 +1,7 @@
 package com.app.campusconnect.data.uistate.dashboard
 
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import com.app.campusconnect.models.common.User
 import com.app.campusconnect.models.dashboard.Enrollment
 import com.app.campusconnect.models.dashboard.Event
@@ -17,7 +19,7 @@ data class DashboardFormState(
     val isSelectedMyEvents: Boolean = true,
     val selectedEvent: Event? = null,
     val isSubscribed: Boolean = false,
-
+    val isPermittedCreationEvent: Boolean = false,
 
     val eventCreated: EventCreated = EventCreated(
         title = "kotlin",

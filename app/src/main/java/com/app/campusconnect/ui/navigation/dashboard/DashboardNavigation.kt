@@ -2,6 +2,9 @@ package com.app.campusconnect.ui.navigation.dashboard
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -60,12 +63,24 @@ fun DashboardNavHost(
             )
         },
         floatingActionButton = {
-            if (currentScreen == DashboardScreen.Home) {
-                EventCreationFab(
-                    onFabClick = {
-                        navController.navigate(DashboardScreen.EventCreation.name)
-                    }
-                )
+            if (dashboardState.formState.isPermittedCreationEvent) {
+                when (currentScreen) {
+                    DashboardScreen.Home ->
+                        EventCreationFab(
+                            imageVector = Icons.Default.Add,
+                            onFabClick = {
+                                navController.navigate(DashboardScreen.EventCreation.name)
+                            }
+                        )
+                    DashboardScreen.EventCreation ->
+                        EventCreationFab(
+                            imageVector = Icons.Default.Done,
+                            onFabClick = {
+                                navController.popBackStack()
+                            }
+                        )
+                    else -> {}
+                }
             }
         }
     ) { innerPadding ->
@@ -97,11 +112,10 @@ fun DashboardNavHost(
             }
             composable(route = DashboardScreen.EventDetails.name) {
                 val selectedEvent = dashboardState.formState.selectedEvent
-                val isSubscribed = dashboardState.formState.isSubscribed
                 if (selectedEvent != null) {
                     EventDetailsScreen(
                         event = selectedEvent,
-                        isSubscribed = isSubscribed,
+                        isSubscribed = dashboardViewModel.setIsSubscribed(selectedEvent),
                         onSubscribeClick = { event ->
                             dashboardViewModel.subscribeEvent(event.id)
                         },

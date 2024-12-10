@@ -36,12 +36,26 @@ class DashboardViewModel @Inject constructor(
     )
     val dashboardState: StateFlow<ScreenState<DashboardFormState>> = _dashboardState.asStateFlow()
 
-
-
     init {
         getEventsList()
         getEventsEnrolled()
         getUserProfile()
+    }
+
+    private fun permittedCreationEvent(){
+        _dashboardState.update {
+            it.copy(
+                formState = it.formState.copy(
+                    isPermittedCreationEvent =  when (dashboardState.value.formState.user?.role) {
+                        "ADMIN" -> true
+                        "TEACHER" -> true
+                        "STUDENT" -> false
+                        "INSTITUTE" -> true
+                        else -> false
+                    }
+                )
+            )
+        }
     }
 
     fun getEventsList() {
@@ -65,6 +79,19 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
+    fun setIsSubscribed(event: Event) : Boolean {
+        _dashboardState.update { it ->
+            it.copy(
+            formState = it.formState.copy(
+                isSubscribed = dashboardState.value.formState
+                    .eventsListEnrolled.any {
+                        it.event.id == event.id
+                    }
+                )
+            )
+        }
+        return dashboardState.value.formState.isSubscribed
+    }
     fun setSelectedEvent(event: Event) {
         _dashboardState.update { it.copy(
             formState = it.formState.copy(
@@ -104,7 +131,6 @@ class DashboardViewModel @Inject constructor(
             Log.d("DashboardViewModel", "Subscribing to event with ID: $id")
             _dashboardState.update { it.copy(uiState = UiState.Loading) }
             _dashboardState.update { it.copy(uiState = submitSubscribeEvent(id)) }
-            _dashboardState.update { it.copy(formState = it.formState.copy(isSubscribed = true)) }
             getEventsEnrolled()
         }
     }
@@ -155,9 +181,6 @@ class DashboardViewModel @Inject constructor(
                 )
             ) }
             UiState.Success
-        }.onFailure {
-            Log.e("DashboardViewModel", "Error fetching enrolled events", it)
-            UiState.Success
         }.getOrElse { e ->
             Log.e("DashboardViewModel", "Error fetching enrolled events", e)
             when (e) {
@@ -197,17 +220,7 @@ class DashboardViewModel @Inject constructor(
                         )
                     )
                 }
-                when (user.role) {
-                    "STUDENT" -> _dashboardState.update {
-                        it.copy(formState = it.formState.copy(user = it.formState.user?.copy(role = "Student")))
-                    }
-                    "TEACHER" -> _dashboardState.update {
-                        it.copy(formState = it.formState.copy(user = it.formState.user?.copy(role = "Teacher")))
-                    }
-                    "INSTITUTE" -> _dashboardState.update {
-                        it.copy(formState = it.formState.copy(user = it.formState.user?.copy(role = "Institute")))
-                    }
-                }
+                permittedCreationEvent()
                 UiState.Success
             } else {
                 UiState.Error(ErrorType.UNKNOWN, "Erro ao recuperar usuário.")
