@@ -9,6 +9,7 @@ import com.app.campusconnect.data.repository.dashboard.NetworkDashboardRepositor
 import com.app.campusconnect.network.authentication.AuthApiService
 import com.app.campusconnect.network.authentication.AuthInterceptor
 import com.app.campusconnect.network.dashboard.DashboardApiService
+import com.app.campusconnect.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,8 +24,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
-    private const val BASE_URL = "http://192.168.10.10:8080"
-
     @Provides
     @Singleton
     fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
@@ -37,7 +36,7 @@ object DataModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(Constants.URL_BASE)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

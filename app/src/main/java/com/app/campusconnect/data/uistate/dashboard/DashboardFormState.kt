@@ -20,9 +20,9 @@ data class DashboardFormState(
     val isPermittedCreationEvent: Boolean = false,
 
     val eventCreated: EventCreated = EventCreated(
-        title = "kotlin",
-        description = "Evento Kotlin",
-        location = "Biblioteca",
+        title = "",
+        description = "",
+        location = "",
         eventDate = "",
     )
 )

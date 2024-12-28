@@ -41,7 +41,6 @@ fun EmailCodeScreen(
         modifier = modifier
             .fillMaxSize()
             .padding(dimensionResource(id = R.dimen.padding_medium))
-
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
